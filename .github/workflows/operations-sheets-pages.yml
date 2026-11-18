@@ -181,7 +181,12 @@ jobs:
           path: _site
 
   deploy:
-    if: github.ref == 'refs/heads/main' && vars.JP_OPERATIONS_PAGES_MODE == 'SHEETS_V2' && (github.event_name != 'workflow_dispatch' || inputs.publish)
+    if: >-
+      always() &&
+      needs.project.result == 'success' &&
+      github.ref == 'refs/heads/main' &&
+      vars.JP_OPERATIONS_PAGES_MODE == 'SHEETS_V2' &&
+      (github.event_name != 'workflow_dispatch' || inputs.publish)
     needs: project
     runs-on: ubuntu-24.04
     timeout-minutes: 10
