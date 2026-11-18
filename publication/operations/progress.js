@@ -8,7 +8,9 @@ const el = (tag, content = "", cls = "") => {
   return node;
 };
 const statusLabel = value => String(value || "Not stated").replaceAll("_", " ");
-const nameOf = (data, id) => data.projects.find(p => p.id === id)?.name || id;
+const nameOf = (data, id) => data.projects.find(p => p.id === id)?.name || "Site";
+const siteSlug = name => String(name || "site").toLowerCase().normalize("NFKD")
+  .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 function renderTrend(rows) {
   const counts = new Map();
   for (const r of rows) counts.set(r.date, (counts.get(r.date) || 0) + 1);
@@ -41,7 +43,7 @@ function render(data) {
     top.append(el("span", "Sheet verification: " + statusLabel(r.verification || "UNVERIFIED"),
       "tag " + (verified ? "verified" : "pending")));
     const link = el("a", "Open site notifications", "quiet-link");
-    link.href = "./?project=" + encodeURIComponent(r.project_id) + "#notifications";
+    link.href = "./?site=" + encodeURIComponent(siteSlug(nameOf(data, r.project_id))) + "#notifications";
     card.append(el("h3", r.work || "Work description not published"),
       el("p", nameOf(data, r.project_id) + " · " + r.date, "card-meta"), top,
       el("p", "Reported activity only. No certified quantity, payment or engineering acceptance is implied."), link);
@@ -55,8 +57,8 @@ fetch("./operations.json", {cache:"no-cache"})
     if (!Array.isArray(data.projects) || !Array.isArray(data.progress)) throw Error("Invalid projection");
     for (const project of data.projects) byId("progress-project").append(new Option(project.name, project.id));
     const requested = new URLSearchParams(location.search).get("project");
-    if (data.projects.some(p => p.id === requested || p.site === requested)) {
-      const match = data.projects.find(p => p.id === requested || p.site === requested);
+    if (data.projects.some(p => p.id === requested || p.site === requested || siteSlug(p.name) === requested)) {
+      const match = data.projects.find(p => p.id === requested || p.site === requested || siteSlug(p.name) === requested);
       byId("progress-project").value = match.id;
     }
     byId("progress-project").addEventListener("change", () => render(data));
