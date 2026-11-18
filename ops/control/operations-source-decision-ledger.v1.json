@@ -309,6 +309,31 @@
       "evidence_url": null,
       "result": "PR_QA_PENDING",
       "limitations": "Original Google Sheets lack Closure Decision/Approved/Date/Reviewer/Reason/Evidence fields; live archive therefore legitimately starts at zero. Source editors must add fields and append-only decision history with A7 PRE/POST process."
+    },
+    {
+      "id": "OPS-DEC-20261118-DRIVE-ARCHIVE-UX",
+      "date_npt": "2026-11-18",
+      "decision": "Keep 22 older Kharika instructions only in Drive; remove from public Actions/Pages without asserting closure. Use readable site names and accept reviewed native Google Doc sources.",
+      "fact_sources": [
+        "notices",
+        "messages",
+        "projects",
+        "choices"
+      ],
+      "code_owner": "GIT_OPERATIONS",
+      "artifacts": [
+        "scripts/publish_operations.py",
+        "scripts/notification_projection.py",
+        "publication/operations/app.js",
+        "publication/operations/extraction.js",
+        "publication/operations/closed-work.html",
+        ".github/workflows/operations-sheets-pages.yml",
+        "scripts/test_ops_publication.py"
+      ],
+      "drive_archive_url": "https://drive.google.com/drive/folders/1Fu2Hsw-kmc83BpIxEe4C4jGB1qwKZ4wh",
+      "evidence_url": null,
+      "result": "PR_QA_PENDING",
+      "limitations": "Source originals kept. Public static JSON remains inspectable; Doc inputs require reviewed Sheet admission, not background Doc polling."
     }
   ]
 }
