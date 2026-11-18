@@ -7,7 +7,7 @@
     "full_name": "FabinGurung/jp-site-operations",
     "default_branch": "main"
   },
-  "observed_at": "2026-10-09T11:49:12.215+05:45",
+  "observed_at": "2026-11-18T18:00:00+05:45",
   "authority": "This file is the compulsory repository-local authority for branch/lane role, active-vs-archive status and legacy alias resolution.",
   "required_before_mutation": true,
   "fail_closed_rules": [
@@ -32,8 +32,8 @@
     "consequence": "Archive refs were created at exact historical SHAs. Original historical aliases remain provider-side until a rename/delete-capable interface is used."
   },
   "counts": {
-    "provider_branch_refs": 47,
-    "active_logical_branches": 2,
+    "provider_branch_refs": 48,
+    "active_logical_branches": 3,
     "canonical_archive_refs": 24,
     "legacy_alias_refs_pending_delete": 21
   },
@@ -57,6 +57,17 @@
       "mutable": true,
       "allowed_for_work": true,
       "tip_policy": "MOVING"
+    },
+    {
+      "branch_id": "OPS-BR-000050",
+      "branch_name": "feature/site-notifications-clean-docsource-20261118",
+      "git_ref": "refs/heads/feature/site-notifications-clean-docsource-20261118",
+      "role": "SCOPED_SITE_NOTIFICATIONS_RELEASE_PR",
+      "status": "ACTIVE",
+      "mutable": true,
+      "allowed_for_work": true,
+      "tip_policy": "MOVING",
+      "purpose": "Drive-only historical notices, human site labels, Google Doc source support"
     }
   ],
   "archive_branches": [
