@@ -53,7 +53,7 @@ fetch("./operations.json", {cache:"no-cache"})
   .then(r => {if (!r.ok) throw Error("Public projection unavailable"); return r.json();})
   .then(data => {
     if (!Array.isArray(data.projects) || !Array.isArray(data.progress)) throw Error("Invalid projection");
-    for (const project of data.projects) byId("progress-project").append(new Option(project.name + " · " + project.id, project.id));
+    for (const project of data.projects) byId("progress-project").append(new Option(project.name, project.id));
     const requested = new URLSearchParams(location.search).get("project");
     if (data.projects.some(p => p.id === requested || p.site === requested)) {
       const match = data.projects.find(p => p.id === requested || p.site === requested);
