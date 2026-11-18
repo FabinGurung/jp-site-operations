@@ -1,6 +1,9 @@
 "use strict";
 /* Source-reviewed site updates: public projections only, no provider scraping. */
 const get = id => document.getElementById(id);
+const siteSlug = name => String(name || "site").toLowerCase().normalize("NFKD")
+  .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const siteQuery = pid => encodeURIComponent(siteSlug(publicData?.projects.find(p => p.id === pid)?.name));
 const el = (tag, content = "", cls = "") => {
   const n = document.createElement(tag);
   if (content != null) n.textContent = String(content);
@@ -59,7 +62,7 @@ function render() {
                  line("Recorded work reports", all.published_work_report_count),
                  line("Unverified work reports", all.unverified_work_report_count));
     const cats = Object.entries(all.notice_categories || {}).filter(([k,v])=>v>0).map(([k,v])=>k + ": " + v).join(" · ");
-    meaning.append(advice(all.registered_message_source_count + " original message source record(s) underpin the reviewed notification register. Different instructions are not necessarily separate chat messages."),
+    meaning.append(advice("Current reviewed site notes are listed here. Earlier instructions remain in the Drive gallery."),
                    advice(cats ? "Reviewed instruction categories: " + cats + ". These are topics, not confirmed shortages or completed tasks." : "No reviewed instruction categories published."),
                    advice(all.unverified_work_report_count + " work report(s) lack verified completion. These are historical reports, not confirmed construction progress.","caution"),
                    advice("Latest reviewed message: " + dateLabel(all.latest_notice_date) +
@@ -70,7 +73,7 @@ function render() {
     if (details.site_summaries.length > affected.length)
       sites.append(el("p", "Other public sites remain accessible through the map; absence of a record is not proof of inactivity.", "help"));
   } else {
-    set("updates-headline", site.name + " · " + site.project_id);
+    set("updates-headline", site.name);
     stats.append(line("Reviewed instructions", site.reviewed_notice_count),
                  line("Recorded work reports", site.published_report_count),
                  line("Unverified work reports", site.unverified_report_count));
@@ -80,9 +83,9 @@ function render() {
                        " · Latest work report: " + dateLabel(site.last_report_date)));
     const actions = el("div", "", "updates-actions");
     const mapLink = el("a", "View site on map");
-    mapLink.href = "./?project=" + encodeURIComponent(site.project_id) + "#map";
+    mapLink.href = "./?site=" + siteQuery(site.project_id) + "#map";
     const noticesLink = el("a", "Site notifications");
-    noticesLink.href = "./?project=" + encodeURIComponent(site.project_id) + "#notifications";
+    noticesLink.href = "./?site=" + siteQuery(site.project_id) + "#notifications";
     actions.append(mapLink, noticesLink);
     sites.append(actions);
   }
@@ -91,14 +94,14 @@ function render() {
     const p = publicData.projects.find(p => p.id === notice.project_id);
     const label = (p ? p.name + " · " : "") + (notice.category || "Instruction");
     records.append(recordCard(label, notice.instruction, notice.date, "Closure not verified",
-      "./?project=" + encodeURIComponent(notice.project_id) + "#notifications"));
+      notice.source_doc_url || ("./?site=" + siteQuery(notice.project_id) + "#notifications")));
   }
   for (const report of reports.slice(0, id ? 12 : 3)) {
     const p = publicData.projects.find(p => p.id === report.project_id);
     records.append(recordCard((p ? p.name + " · " : "") + "Work report",
       report.work || "Work description not available",
       report.date, report.verification === "VERIFIED" ? "Recorded as verified" : "Verification not confirmed",
-      "./?project=" + encodeURIComponent(report.project_id) + "#map"));
+      "./?site=" + siteQuery(report.project_id) + "#map"));
   }
   if (maxNotices < notices.length) records.append(el("p", "Showing the first " + maxNotices +
     " reviewed notices. Choose a site or open Notifications to see the full approved register.", "help"));
@@ -106,7 +109,7 @@ function render() {
 }
 function siteRow(s) {
   const a = el("a", "", "updates-site");
-  a.href = "./extraction.html?project=" + encodeURIComponent(s.project_id);
+  a.href = "./extraction.html?site=" + siteQuery(s.project_id);
   a.append(el("strong", s.name));
   const n = s.reviewed_notice_count + " reviewed instructions · " +
             s.published_report_count + " work reports";
@@ -116,7 +119,7 @@ function siteRow(s) {
   a.addEventListener("click", event => {
     event.preventDefault();
     get("updates-project").value = s.project_id;
-    history.replaceState(null, "", "./extraction.html?project=" + encodeURIComponent(s.project_id));
+    history.replaceState(null, "", "./extraction.html?site=" + siteQuery(s.project_id));
     render();
     get("updates-summary-title").scrollIntoView({behavior:"smooth",block:"start"});
   });
@@ -135,15 +138,17 @@ Promise.all([
     throw Error("Update/source projection mismatch");
   publicData = ops; details = update;
   for (const project of [...ops.projects].sort((a,b)=>a.name.localeCompare(b.name)))
-    get("updates-project").append(new Option(project.name + " · " + project.id, project.id));
-  const requested = new URLSearchParams(location.search).get("project");
-  if (update.site_summaries.some(s=>s.project_id === requested))
-    get("updates-project").value = requested;
+    get("updates-project").append(new Option(project.name, project.id));
+  const params = new URLSearchParams(location.search);
+  const requested = params.get("site") || params.get("project");
+  const match = ops.projects.find(p => p.id === requested || siteSlug(p.name) === requested);
+  if (match && update.site_summaries.some(s=>s.project_id === match.id))
+    get("updates-project").value = match.id;
   set("updates-readback", "Source readback: " + (update.readback_at_npt || "Not supplied") +
     ". Source dates are shown separately; publication does not certify site completion.");
   get("updates-project").addEventListener("change", () => {
     const id = get("updates-project").value;
-    history.replaceState(null, "", id ? "./extraction.html?project=" + encodeURIComponent(id) : "./extraction.html");
+    history.replaceState(null, "", id ? "./extraction.html?site=" + siteQuery(id) : "./extraction.html");
     render();
   });
   render();

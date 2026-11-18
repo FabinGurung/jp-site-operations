@@ -7,7 +7,7 @@
     "full_name": "FabinGurung/jp-site-operations",
     "default_branch": "main"
   },
-  "observed_at": "2026-10-09T11:49:12.215+05:45",
+  "observed_at": "2026-11-18T18:00:00+05:45",
   "authority": "This file is the compulsory repository-local authority for branch/lane role, active-vs-archive status and legacy alias resolution.",
   "required_before_mutation": true,
   "fail_closed_rules": [
@@ -910,6 +910,27 @@
         ".github/workflows/operations-sheets-pages.yml",
         "AGENTS.md",
         "scripts/build_status_filter_fixture.py"
+      ]
+    },
+    {
+      "branch_id": "OPS-SYS-NOTIFICATION-CLEAN-R10",
+      "branch_name": "feature/site-notifications-clean-docsource-20261118",
+      "status": "ACTIVE_FEATURE_LANE",
+      "allowed_for_work": true,
+      "requires_pull_request": true,
+      "merge_base": "main",
+      "direct_pages_deploy": false,
+      "purpose": "2026-11-18 current-site notifications UI with historical Drive-only source, Doc intake and no visible technical IDs; PR-only.",
+      "allowed_paths": [
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "scripts/publish_operations.py",
+        "scripts/notification_projection.py",
+        "scripts/test_ops_publication.py",
+        "publication/operations/",
+        ".github/workflows/operations-sheets-pages.yml",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json"
       ]
     }
   ]

@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from publish_operations import SOURCES, build as original_build, reviewed_closure
+from publish_operations import SOURCES, build as original_build, reviewed_closure, LEGACY_DRIVE_ONLY_SOURCES
 
 def add_live_source_fixtures(tables):
     """Synthetic seven-source layout; production always reads Google Sheets."""
@@ -24,6 +24,65 @@ def build(tables, out, timestamp):
 
 
 class OperationsPublicationTest(unittest.TestCase):
+    def test_source_backed_docs_and_legacy_gallery(self):
+        from notification_projection import original_file_id, check_origin
+        live = "https://docs.google.com/document/d/abcDEF012345/edit"
+        post = "https://docs.google.com/document/d/xyzDEF012345/edit"
+        check_origin("Google Doc", live)
+        self.assertEqual(original_file_id(post), "xyzDEF012345")
+        self.assertIn("MSG-SLACK-C0C2LFV6XLM-1792979252137289",
+                      LEGACY_DRIVE_ONLY_SOURCES)
+
+        old_source = next(iter(LEGACY_DRIVE_ONLY_SOURCES))
+        t = {
+            "projects": [
+                ["Project ID", "Is Public", "Display Name", "Data Quality Status",
+                 "Executing Company ID", "Latitude", "Longitude", "Status", "Location Ward Number",
+                 "Legacy Project Code"],
+                ["PRJ-000020", True, "Legacy project", "VALID", "ORG-000001",
+                 "", "", "Construction", "", "P020"],
+            ],
+            "choices": [
+                ["Publication Setting ID", "Project ID", "Show Project Name", "Show Coordinates",
+                 "Show Ward Number", "Show Status"],
+                ["PPS-020", "PRJ-000020", True, False, False, True],
+            ],
+            "messages": [
+                ["Source ID", "Source Version", "Source SHA256", "Source Message",
+                 "Saved Original", "Project ID"],
+                [old_source, "V000001", "0"*64, "https://example.slack.com/archives/C123/p123",
+                 "https://drive.google.com/file/d/ABC123/view", "PRJ-000020"],
+            ],
+            "notices": [
+                ["Notification ID", "Project ID", "Source ID", "Publish", "Review State"],
+                ["NTF-LEGACY-01", "PRJ-000020", old_source, True, "Reviewed"],
+            ],
+            "progress": [
+                ["Project Work ID", "Project ID", "Is Public", "Description Override",
+                 "Last Updated", "Work Status", "Verification Status"],
+            ],
+        }
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp)
+            count = build(t, out, "test")
+            self.assertEqual(count, (1, 0, 0))
+            data = json.loads((out/"operations.json").read_text())
+            self.assertEqual(data["notices"], [])
+            self.assertEqual(json.loads((out/"closed-work.json").read_text())["total"], 0)
+            self.assertIn("drive.google.com/drive/folders/",
+                          data["historical_notice_gallery"])
+            self.assertNotIn("NTF-LEGACY-01", (out/"operations.json").read_text())
+
+    def test_public_ui_masks_machine_identifiers(self):
+        root = Path(__file__).resolve().parents[1] / "publication/operations"
+        app = (root / "app.js").read_text()
+        self.assertNotIn('["Project ID", p.id]', app)
+        self.assertNotIn('p.id + " · " + info.note', app)
+        self.assertNotIn('new Option(p.name + " · " + p.id', app)
+        self.assertNotIn("Stable record:", (root/"closed-work.js").read_text())
+        self.assertIn("Earlier notifications in Google Drive", (root/"index.html").read_text())
+
+
     def test_scope_privacy_and_legacy_routes(self):
         tables = {
             "projects": [

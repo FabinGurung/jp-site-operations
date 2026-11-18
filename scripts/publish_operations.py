@@ -37,6 +37,12 @@ CLOSURE_DECISIONS = {
 }
 
 
+# Source-owned legacy notes: preserved in the Drive Gallery without pretending
+# these historic observations are closed. Excluded from new public Actions JSON.
+LEGACY_DRIVE_ONLY_SOURCES = frozenset({"MSG-SLACK-C0C2LFV6XLM-1792979252137289"})
+LEGACY_NOTICE_GALLERY_URL = "https://drive.google.com/drive/folders/1Fu2Hsw-kmc83BpIxEe4C4jGB1qwKZ4wh"
+
+
 def reviewed_closure(row, record_id):
     """Only source-approved, reviewer/evidence-backed decisions can leave the active view.
 
@@ -128,7 +134,7 @@ def build(tables, out, received_at):
         setting = choices.get(pid)
         if not setting:
             continue
-        project = {"id": pid, "name": row["display_name"] if yes(setting["show_project_name"]) else pid,
+        project = {"id": pid, "name": row["display_name"] if yes(setting["show_project_name"]) else "Site name withheld",
                    "status": row["status"] if yes(setting["show_status"]) else "",
                    "ward": row["location_ward_number"] if yes(setting["show_ward_number"]) else ""}
         if re.fullmatch(r"P[0-9]{3}", row["legacy_project_code"]):
@@ -159,12 +165,17 @@ def build(tables, out, received_at):
              "project_id": r["project_id"]} for r in sources}
     notice_rows = tables["notices"]
     project_column = notice_rows[0].index("Project ID")
+    source_column = notice_rows[0].index("Source ID") if "Source ID" in notice_rows[0] else None
     selected = [notice_rows[0], *(r for r in notice_rows[1:] if
-                len(r) > project_column and r[project_column] in projects)]
+                len(r) > project_column and r[project_column] in projects and
+                (source_column is None or
+                 (len(r) > source_column and r[source_column] not in LEGACY_DRIVE_ONLY_SOURCES)))]
     compiled = compile_notifications(source_rows, selected,
         {"admitted_sources": grants, "source_sheet_url": ""},
         project_ids=set(projects), mode="ACTIONS_SHEETS_REFRESH")
     source_dates = {s["source_id"]: s["date_npt"] for s in compiled["sources"]}
+    doc_links = {s["source_id"]: s["source_url"] for s in compiled["sources"]
+                 if s["provider"] == "Google Doc"}
     notice_keys = ("notification_id", "project_id", "category", "instruction", "due_date", "display_order")
     approved_notice_rows = {row["notification_id"]: row
                             for row in notification_records(notice_rows, "notification_id")}
@@ -172,6 +183,8 @@ def build(tables, out, received_at):
     notices = []
     for item in compiled["items"]:
         candidate = {**{k: item[k] for k in notice_keys}, "date": source_dates[item["source_id"]]}
+        if item["source_id"] in doc_links:
+            candidate["source_doc_url"] = doc_links[item["source_id"]]
         reviewed = reviewed_closure(approved_notice_rows[item["notification_id"]], item["notification_id"])
         if reviewed:
             archived.append({
@@ -235,6 +248,7 @@ def build(tables, out, received_at):
         "projects": list(projects.values()),
         "notices": notices,
         "progress": progress,
+        "historical_notice_gallery": LEGACY_NOTICE_GALLERY_URL,
         "refreshed_at_npt": received_at,
         "identity": {
             "schema_version": "1.0.0",
@@ -265,6 +279,7 @@ def build(tables, out, received_at):
             "source_authority": "GOOGLE_SHEETS",
             "direct_slack_collector": "NOT_CONNECTED_TO_THIS_PUBLISHER",
             "direct_discord_collector": "ON_HOLD",
+            "legacy_notification_visibility": "DRIVE_GALLERY_ONLY__NOT_SOURCE_CLOSURE",
             "engineering_completion": "NOT_CERTIFIED_BY_THIS_DASHBOARD"
         }
     }

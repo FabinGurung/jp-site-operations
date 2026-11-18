@@ -5,6 +5,9 @@ if (location.hash === "#progress")
 if (location.hash === "#sources")
   location.replace("./sources.html" + location.search);
 const byId = id => document.getElementById(id);
+const siteSlug = name => String(name || "site").toLowerCase().normalize("NFKD")
+  .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const siteQuery = pid => encodeURIComponent(siteSlug(dataset?.projects.find(p => p.id === pid)?.name));
 const make = (tag, content = "", className = "") => {
   const e = document.createElement(tag);
   e.textContent = content;
@@ -75,7 +78,7 @@ const mapReading = p => {
 };
 const hasPin = p => Number.isFinite(p.lat) && Number.isFinite(p.lng);
 const readable = value => String(value || "").replaceAll("_", " ").trim();
-const projectName = id => (dataset.projects.find(p => p.id === id) || {}).name || id;
+const projectName = id => (dataset.projects.find(p => p.id === id) || {}).name || "Selected site";
 const selectedProject = () => activeSiteId || byId("project-filter").value;
 const selectedCompany = () => byId("company-filter").value;
 const filteredProjects = () => dataset.projects.filter(p =>
@@ -143,7 +146,7 @@ function drawMap(projects) {
       icon: L.divIcon({html: badge.outerHTML, className: "site-map-pin", iconSize: [48, 48], iconAnchor:[24, 46]})
     });
     const popup = make("div", "", "site-map-popup");
-    withChildren(popup, make("strong", p.name), make("p", p.id + " · " + info.note));
+    withChildren(popup, make("strong", p.name), make("p", info.note));
     const entries = projectRecords(p.id);
     popup.append(make("p", entries.work.length + " public reports · " + entries.notices.length + " reviewed instructions"));
     const select = make("button", "View notifications", "quiet");
@@ -171,7 +174,7 @@ function updateProjectIndex(projects) {
     button.setAttribute("aria-pressed", selectedProject() === p.id ? "true" : "false");
     if (selectedProject() === p.id) button.classList.add("active");
     withChildren(button, make("strong", p.name),
-      make("span", [p.id, p.ward ? "Ward " + p.ward : "", hasPin(p) ? "Mapped" : "No approved location",
+      make("span", [p.ward ? "Ward " + p.ward : "", hasPin(p) ? "Mapped" : "No approved location",
         mapReading(p).note, p.quality ? "Quality: " + readable(p.quality) : ""].filter(Boolean).join(" · ")));
     button.addEventListener("click", () => chooseProject(p.id, true));
     return button;
@@ -192,7 +195,6 @@ function updateContext(overrideId) {
   const notices = dataset.notices.filter(n => n.project_id === p.id);
   const detail = make("dl");
   const pairs = [
-    ["Project ID", p.id],
     ["Executing organization", p.company || "Not public"],
     ["Location", p.ward ? "Ward " + p.ward : "Not published"],
     ["Map pin", hasPin(p) ? "Approved" : "Not published"],
@@ -202,7 +204,7 @@ function updateContext(overrideId) {
   ];
   for (const [label, value] of pairs) withChildren(detail, make("dt", label), make("dd", value));
   const progressLink = make("a", "Open daily progress for this site", "quiet-link");
-  progressLink.href = "./progress.html?project=" + encodeURIComponent(p.id);
+  progressLink.href = "./progress.html?site=" + siteQuery(p.id);
   root.replaceChildren(make("h3", p.name), make("p", p.status ? "Listed status: " + p.status : "No public status"),
     detail, make("p", "Listed status and reporting records do not certify completed work.", "help"),
     progressLink);
@@ -212,15 +214,15 @@ function noticeCard(n) {
   const wrapper = make("article", "", "card notice-item");
   const head = make("div", "", "notice-item-head");
   const badge = make("span", readable(n.category || "Other"), "notice-type " + String(n.category || "").toLowerCase());
-  const sourceLabel = make("span", "Reviewed source · " + (n.date || "Date not published"), "notice-source");
+  const sourceLabel = make("span", "Site note · " + (n.date || "Date not published"), "notice-source");
   head.append(badge, sourceLabel);
   const title = make("h3", n.instruction || "Public instruction not provided");
-  const project = make("p", projectName(n.project_id) + " · " + n.project_id, "card-meta");
+  const project = make("p", projectName(n.project_id), "card-meta");
   const bottom = make("div", "", "notice-item-bottom");
   if (n.due_date) bottom.append(make("span", "Source due date: " + n.due_date, "notice-due"));
   bottom.append(make("span", "Resolution not recorded in this public view", "notice-resolution"));
-  const link = make("a", "Project's daily progress", "notice-related");
-  link.href = "./progress.html?project=" + encodeURIComponent(n.project_id);
+  const link = make("a", n.source_doc_url ? "Open original site note" : "Site updates", "notice-related");
+  link.href = n.source_doc_url || ("./extraction.html?site=" + siteQuery(n.project_id));
   return withChildren(wrapper, head, title, project, bottom, link);
 }
 
@@ -237,7 +239,7 @@ function renderNotifications() {
   const site = dataset.projects.find(p => p.id === selectedProject());
   byId("notice-focus-title").textContent = site ? site.name : "All approved sites";
   byId("notice-focus-detail").textContent = site
-    ? site.id + " · " + eligible.length + " reviewed notifications · Status: " +
+    ? eligible.length + " site notifications · Status: " +
       (site.status || "Not publicly stated")
     : "Select a site here, in the directory, or on the map. No notice is assumed unresolved.";
   byId("notice-site").value = selectedProject();
@@ -245,10 +247,10 @@ function renderNotifications() {
   details.hidden = !activeSiteId && !showAllNotices;
   byId("clear-map-selection").hidden = !activeSiteId;
   byId("map-selection-hint").textContent = activeSiteId
-    ? "Selected: " + (site?.name || activeSiteId) + " · Tap empty map or Back to all sites"
+    ? "Selected: " + (site?.name || "site") + " · Tap empty map or Back to all sites"
     : "Tap a site marker to view its notifications";
   byId("site-progress-link").href = site
-    ? "./extraction.html?project=" + encodeURIComponent(site.id) : "./extraction.html";
+    ? "./extraction.html?site=" + siteQuery(site.id) : "./extraction.html";
   safeList("notice-list", items.map(noticeCard),
     site ? "No approved notifications for this site and category." : "No approved notifications match these filters.");
 }
@@ -300,11 +302,13 @@ function load(payload) {
   for (const [id, name] of [...companyLabels].sort((a, b) => a[1].localeCompare(b[1])))
     byId("company-filter").append(new Option(name, id));
   for (const p of dataset.projects) {
-    byId("project-filter").append(new Option(p.name + " · " + p.id, p.id));
-    byId("notice-site").append(new Option(p.name + " · " + p.id, p.id));
+    byId("project-filter").append(new Option(p.name, p.id));
+    byId("notice-site").append(new Option(p.name, p.id));
   }
-  const requested = new URLSearchParams(location.search).get("project");
-  const p = dataset.projects.find(item => item.id === requested || item.site === requested);
+  const params = new URLSearchParams(location.search);
+  const requested = params.get("site") || params.get("project");
+  const p = dataset.projects.find(item => item.id === requested || item.site === requested ||
+                                         siteSlug(item.name) === requested);
   if (p) {
     byId("project-filter").value = p.id;
     byId("notice-site").value = p.id;

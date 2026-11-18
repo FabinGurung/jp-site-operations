@@ -122,3 +122,13 @@ User-provided iPhone screenshots showed unreachably small/clipped top navigation
 **History:** Do not physically delete original Sheet rows or conflate project `Completed` with an engineer-verified work item. Reopened/changed closure decisions require an append-only change event and original-IDs PRE/POST copies, with history log in the source's governed Drive. A public static website is read-only; source changes happen in the owning Sheet, not by an unauthenticated button. GitHub release `v3.2.0` is code/UI/schema-acceptance milestone, not a fabricated field-completion release.
 
 See [governed release decision](../releases/v3.2.0.md). The active source publisher still uses the exact seven linked original Google Sheets above.
+
+## 12. 18 November 2026 — Drive-only historical notifications and human-readable site UI
+
+**User-requested public policy:** the 22 October Kharika Paudel reviewed instruction rows from one Slack message remain in their original Google Sheets and [Drive history gallery](https://drive.google.com/drive/folders/1Fu2Hsw-kmc83BpIxEe4C4jGB1qwKZ4wh), without changing their completion/closure state. They are excluded by exact SOURCE ID from new Actions-generated public notifications. The link is historical, **not** a certified Closed & Archived Work decision.
+
+**New site source:** 31_Sharada Adhikari, existing project identity PRJ-000006, has a permanent [LIVE Google Doc V000002](https://docs.google.com/document/d/1420TU9NU1sgK_ATnXlnOYaDmctYH_6yFii6-ZYjjaws/edit) and controlled PRE/POST history in its project folder. Crusher and plaster baluwa are only *expected*, not confirmed received; kitchen slab formwork, tile/granite finishing, exterior height after floor finish, and ceiling/underside levels are pending checks. Admission of those notes into public Pages requires reviewed original Message Sources and Notification Instructions records. The publisher validates Google Doc original URLs, but does **not** autonomously crawl Google Docs.
+
+**Presentation:** public Pages no longer prints project, notice or database IDs as human-facing text; machine join keys continue in source Sheet/Git logic and public static JSON (which is inspectable, not private). The map, current notice page, site updates, and verified closure page remain separate. One Drive-gallery link replaces historical noise. No A7/sibling repo changes; no old items deleted.
+
+**Governed feature:** `feature/site-notifications-clean-docsource-20261118`, validation and live served Pages receipt required for deployment claim. Source Sheets have their own stable ID, PRE/POST and version history policy; release code should never overwrite them to fix a compiler issue.
