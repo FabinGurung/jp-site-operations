@@ -134,7 +134,7 @@ def build(tables, out, received_at):
         setting = choices.get(pid)
         if not setting:
             continue
-        project = {"id": pid, "name": row["display_name"] if yes(setting["show_project_name"]) else pid,
+        project = {"id": pid, "name": row["display_name"] if yes(setting["show_project_name"]) else "Site name withheld",
                    "status": row["status"] if yes(setting["show_status"]) else "",
                    "ward": row["location_ward_number"] if yes(setting["show_ward_number"]) else ""}
         if re.fullmatch(r"P[0-9]{3}", row["legacy_project_code"]):
