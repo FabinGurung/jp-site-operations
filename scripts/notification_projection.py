@@ -35,10 +35,12 @@ def records(rows, key):
 
 def original_file_id(url):
     u = urlsplit(url)
-    match = re.fullmatch(r"/file/d/([\w-]+)/view", u.path)
-    if u.scheme != "https" or u.netloc != "drive.google.com" or not match:
+    file_match = re.fullmatch(r"/file/d/([\w-]+)/view", u.path)
+    doc_match = re.fullmatch(r"/document/d/([\w-]+)/(?:edit|view)", u.path)
+    if u.scheme != "https" or not ((u.netloc == "drive.google.com" and file_match)
+                                   or (u.netloc == "docs.google.com" and doc_match)):
         raise NotificationError("NOTIFICATION_ORIGINAL_URL_INVALID")
-    return match[1]
+    return file_match[1] if file_match else doc_match[1]
 
 
 def check_origin(provider, url):
@@ -47,7 +49,9 @@ def check_origin(provider, url):
         return  # A chat without a share link still has its archived original.
     allowed = (provider == "Slack" and u.netloc.endswith(".slack.com") and re.fullmatch(r"/archives/[A-Z0-9]+/p[0-9]+", u.path)
                or provider == "Discord" and u.netloc == "discord.com" and u.path.startswith("/channels/")
-               or provider == "Chat" and u.netloc == "chatgpt.com" and u.path.startswith("/c/"))
+               or provider == "Chat" and u.netloc == "chatgpt.com" and u.path.startswith("/c/")
+               or provider == "Google Doc" and u.netloc == "docs.google.com"
+               and re.fullmatch(r"/document/d/[\w-]+/(?:edit|view)", u.path))
     if u.scheme != "https" or not allowed:
         raise NotificationError("NOTIFICATION_ORIGIN_URL_INVALID")
 
