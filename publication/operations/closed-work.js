@@ -11,14 +11,14 @@ function render(){
  const root=el("closed-records");root.replaceChildren();
  if(!list.length){
    root.append(node("p",archive.total===0?
-      "No source-approved closures have been recorded yet. The older notifications and reported work are not automatically treated as completed or unnecessary.":
+      "No approved closures are listed. Earlier notifications are kept in the Google Drive gallery, without being marked completed.":
       "No approved closed items match this selection.","closure-empty"));
    return;
  }
  for(const r of list){
    const card=node("article","","closure-item");
    const heading=node("div","","closure-item-head");
-   heading.append(node("strong",r.project_name+" · "+r.project_id),node("span",r.decision_label,"closure-pill"));
+   heading.append(node("strong",r.project_name),node("span",r.decision_label,"closure-pill"));
    card.append(heading,node("p",r.summary));
    const meta=node("p",r.kind+" · "+(r.category||"Work")+
      " · Recorded: "+dateLabel(r.source_date)+" · Closure approved: "+dateLabel(r.closed_on),"closure-meta");
@@ -26,7 +26,7 @@ function render(){
    link.href=r.kind==="Instruction"?
     "https://docs.google.com/spreadsheets/d/1ZPtTos8t9Cym_qnpiUhiyuTxndSc6sGzzv390ahAw4I/edit":
     "https://docs.google.com/spreadsheets/d/17YPRpaXIdHloH5-lzsjUpNvXLbsDfrIrlsn2jZ-7KKc/edit";
-   card.append(meta,node("small","Stable record: "+r.id+" · Closure reviewer, reason and evidence remain in the original restricted register."),link);
+   card.append(meta,node("small","Closure reviewer, reason and evidence remain in the original restricted register."),link);
    root.append(card);
  }
 }
@@ -43,7 +43,7 @@ fetch("./closed-work.json",{cache:"no-store"})
  el("closed-unneeded").textContent=String((data.decisions.NOT_REQUIRED||0)+(data.decisions.CANCELLED||0)+(data.decisions.SUPERSEDED||0));
  const byProject=new Map(data.records.map(r=>[r.project_id,r.project_name]));
  for(const [id,name] of [...byProject].sort((a,b)=>a[1].localeCompare(b[1])))
-   el("closed-project").append(new Option(name+" · "+id,id));
+   el("closed-project").append(new Option(name,id));
  const requested=new URLSearchParams(location.search).get("project");
  if(byProject.has(requested))el("closed-project").value=requested;
  el("closed-readback").textContent="Last source readback: "+(data.readback_at_npt||"Not supplied")+
