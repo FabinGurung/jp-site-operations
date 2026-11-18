@@ -29,19 +29,7 @@
    <p id="closed-readback" class="help" role="status">Reading original, source-reviewed closure decisions…</p>
    <div id="closed-records" class="closure-records" aria-live="polite"><p>Loading closed items…</p></div>
   </section>
-  <details class="surface closure-guide" open>
-    <summary>How to close or remove a task from the active view</summary>
-    <ol>
-      <li>Locate the original record in the <strong>owning Google Sheet</strong>. Do not delete or move the original row.</li>
-      <li>Record <strong>Closure Decision</strong> as <code>COMPLETED</code>, <code>NOT_REQUIRED</code>, <code>CANCELLED</code>, or <code>SUPERSEDED</code>. A reason, date and reviewer are required. A completed item requires an evidence reference; a completed Project Work item additionally requires <code>Verification Status = VERIFIED</code>. Supersession requires a reference to the replacement item in the source register.</li>
-      <li>After source review, set <strong>Closure Approved = TRUE</strong>. An unapproved or incomplete decision stays visible in the active source view. Only an approved closure moves here after the next successful Actions publication.</li>
-      <li>To correct or reopen a closure, preserve an audit receipt and source revision; do not silently erase the earlier decision. Keep original evidence restricted.</li>
-    </ol>
-    <p class="help">The existing workbooks currently have no recorded, approved closure fields. Their owners must add the documented closure columns under A7 PRE/POST source version control before closing real rows. This public GitHub Pages website is deliberately read-only.</p>
-    <div class="closure-source-links">
-      <a href="https://docs.google.com/spreadsheets/d/1ZPtTos8t9Cym_qnpiUhiyuTxndSc6sGzzv390ahAw4I/edit">Edit original Notification Instructions</a>
-      <a href="https://docs.google.com/spreadsheets/d/17YPRpaXIdHloH5-lzsjUpNvXLbsDfrIrlsn2jZ-7KKc/edit">Edit original Project Work</a>
-      <a href="./sources.html">Source &amp; version history</a>
-    </div>
-  </details>
+  <section class="surface closure-guide" aria-label="Closure guidance">
+    <p>Only verified, approved closures appear here. To update or reopen a task, use the original site records in Google Drive. Earlier instructions remain preserved in the <a href="https://drive.google.com/drive/folders/1Fu2Hsw-kmc83BpIxEe4C4jGB1qwKZ4wh">historical gallery</a>; their age does not mean they were completed.</p>
+  </section>
 </main></body></html>

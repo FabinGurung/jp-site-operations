@@ -132,3 +132,8 @@ See [governed release decision](../releases/v3.2.0.md). The active source publis
 **Presentation:** public Pages no longer prints project, notice or database IDs as human-facing text; machine join keys continue in source Sheet/Git logic and public static JSON (which is inspectable, not private). The map, current notice page, site updates, and verified closure page remain separate. One Drive-gallery link replaces historical noise. No A7/sibling repo changes; no old items deleted.
 
 **Governed feature:** `feature/site-notifications-clean-docsource-20261118`, validation and live served Pages receipt required for deployment claim. Source Sheets have their own stable ID, PRE/POST and version history policy; release code should never overwrite them to fix a compiler issue.
+
+
+## 13. 18 November 2026 — Minimal secondary archive instructions
+
+After merging [PR #43](https://github.com/FabinGurung/jp-site-operations/pull/43), the 22 historic notices stay only in the Drive gallery while the five Sharada Doc-first source records are entered into the original registered Sheets with their own V000003/V000005 PRE/POST history. Follow-up code change removes developer closure-field instructions and raw "source IDs" text from the public secondary pages. Source version/approval constraints stay in Google Drive and Git logic. Validation and served Pages QA remain separate from the code merge.
