@@ -32,8 +32,8 @@
     "consequence": "Archive refs were created at exact historical SHAs. Original historical aliases remain provider-side until a rename/delete-capable interface is used."
   },
   "counts": {
-    "provider_branch_refs": 48,
-    "active_logical_branches": 3,
+    "provider_branch_refs": 47,
+    "active_logical_branches": 2,
     "canonical_archive_refs": 24,
     "legacy_alias_refs_pending_delete": 21
   },
@@ -57,17 +57,6 @@
       "mutable": true,
       "allowed_for_work": true,
       "tip_policy": "MOVING"
-    },
-    {
-      "branch_id": "OPS-BR-000050",
-      "branch_name": "feature/site-notifications-clean-docsource-20261118",
-      "git_ref": "refs/heads/feature/site-notifications-clean-docsource-20261118",
-      "role": "SCOPED_SITE_NOTIFICATIONS_RELEASE_PR",
-      "status": "ACTIVE",
-      "mutable": true,
-      "allowed_for_work": true,
-      "tip_policy": "MOVING",
-      "purpose": "Drive-only historical notices, human site labels, Google Doc source support"
     }
   ],
   "archive_branches": [
@@ -921,6 +910,27 @@
         ".github/workflows/operations-sheets-pages.yml",
         "AGENTS.md",
         "scripts/build_status_filter_fixture.py"
+      ]
+    },
+    {
+      "branch_id": "OPS-SYS-NOTIFICATION-CLEAN-R10",
+      "branch_name": "feature/site-notifications-clean-docsource-20261118",
+      "status": "ACTIVE_FEATURE_LANE",
+      "allowed_for_work": true,
+      "requires_pull_request": true,
+      "merge_base": "main",
+      "direct_pages_deploy": false,
+      "purpose": "2026-11-18 current-site notifications UI with historical Drive-only source, Doc intake and no visible technical IDs; PR-only.",
+      "allowed_paths": [
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "scripts/publish_operations.py",
+        "scripts/notification_projection.py",
+        "scripts/test_ops_publication.py",
+        "publication/operations/",
+        ".github/workflows/operations-sheets-pages.yml",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json"
       ]
     }
   ]
