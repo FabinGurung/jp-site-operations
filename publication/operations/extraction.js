@@ -59,7 +59,7 @@ function render() {
                  line("Recorded work reports", all.published_work_report_count),
                  line("Unverified work reports", all.unverified_work_report_count));
     const cats = Object.entries(all.notice_categories || {}).filter(([k,v])=>v>0).map(([k,v])=>k + ": " + v).join(" · ");
-    meaning.append(advice(all.registered_message_source_count + " original message source record(s) underpin the reviewed notification register. Different instructions are not necessarily separate chat messages."),
+    meaning.append(advice("Current reviewed site notes are listed here. Earlier instructions remain in the Drive gallery."),
                    advice(cats ? "Reviewed instruction categories: " + cats + ". These are topics, not confirmed shortages or completed tasks." : "No reviewed instruction categories published."),
                    advice(all.unverified_work_report_count + " work report(s) lack verified completion. These are historical reports, not confirmed construction progress.","caution"),
                    advice("Latest reviewed message: " + dateLabel(all.latest_notice_date) +
@@ -70,7 +70,7 @@ function render() {
     if (details.site_summaries.length > affected.length)
       sites.append(el("p", "Other public sites remain accessible through the map; absence of a record is not proof of inactivity.", "help"));
   } else {
-    set("updates-headline", site.name + " · " + site.project_id);
+    set("updates-headline", site.name);
     stats.append(line("Reviewed instructions", site.reviewed_notice_count),
                  line("Recorded work reports", site.published_report_count),
                  line("Unverified work reports", site.unverified_report_count));
@@ -91,7 +91,7 @@ function render() {
     const p = publicData.projects.find(p => p.id === notice.project_id);
     const label = (p ? p.name + " · " : "") + (notice.category || "Instruction");
     records.append(recordCard(label, notice.instruction, notice.date, "Closure not verified",
-      "./?project=" + encodeURIComponent(notice.project_id) + "#notifications"));
+      notice.source_doc_url || ("./?project=" + encodeURIComponent(notice.project_id) + "#notifications")));
   }
   for (const report of reports.slice(0, id ? 12 : 3)) {
     const p = publicData.projects.find(p => p.id === report.project_id);
@@ -135,7 +135,7 @@ Promise.all([
     throw Error("Update/source projection mismatch");
   publicData = ops; details = update;
   for (const project of [...ops.projects].sort((a,b)=>a.name.localeCompare(b.name)))
-    get("updates-project").append(new Option(project.name + " · " + project.id, project.id));
+    get("updates-project").append(new Option(project.name, project.id));
   const requested = new URLSearchParams(location.search).get("project");
   if (update.site_summaries.some(s=>s.project_id === requested))
     get("updates-project").value = requested;
