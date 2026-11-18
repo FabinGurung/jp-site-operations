@@ -5,6 +5,9 @@ if (location.hash === "#progress")
 if (location.hash === "#sources")
   location.replace("./sources.html" + location.search);
 const byId = id => document.getElementById(id);
+const siteSlug = name => String(name || "site").toLowerCase().normalize("NFKD")
+  .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const siteQuery = pid => encodeURIComponent(siteSlug(dataset?.projects.find(p => p.id === pid)?.name));
 const make = (tag, content = "", className = "") => {
   const e = document.createElement(tag);
   e.textContent = content;
@@ -201,7 +204,7 @@ function updateContext(overrideId) {
   ];
   for (const [label, value] of pairs) withChildren(detail, make("dt", label), make("dd", value));
   const progressLink = make("a", "Open daily progress for this site", "quiet-link");
-  progressLink.href = "./progress.html?project=" + encodeURIComponent(p.id);
+  progressLink.href = "./progress.html?site=" + siteQuery(p.id);
   root.replaceChildren(make("h3", p.name), make("p", p.status ? "Listed status: " + p.status : "No public status"),
     detail, make("p", "Listed status and reporting records do not certify completed work.", "help"),
     progressLink);
@@ -219,7 +222,7 @@ function noticeCard(n) {
   if (n.due_date) bottom.append(make("span", "Source due date: " + n.due_date, "notice-due"));
   bottom.append(make("span", "Resolution not recorded in this public view", "notice-resolution"));
   const link = make("a", n.source_doc_url ? "Open original site note" : "Site updates", "notice-related");
-  link.href = n.source_doc_url || ("./extraction.html?project=" + encodeURIComponent(n.project_id));
+  link.href = n.source_doc_url || ("./extraction.html?site=" + siteQuery(n.project_id));
   return withChildren(wrapper, head, title, project, bottom, link);
 }
 
@@ -247,7 +250,7 @@ function renderNotifications() {
     ? "Selected: " + (site?.name || "site") + " · Tap empty map or Back to all sites"
     : "Tap a site marker to view its notifications";
   byId("site-progress-link").href = site
-    ? "./extraction.html?project=" + encodeURIComponent(site.id) : "./extraction.html";
+    ? "./extraction.html?site=" + siteQuery(site.id) : "./extraction.html";
   safeList("notice-list", items.map(noticeCard),
     site ? "No approved notifications for this site and category." : "No approved notifications match these filters.");
 }
@@ -302,8 +305,10 @@ function load(payload) {
     byId("project-filter").append(new Option(p.name, p.id));
     byId("notice-site").append(new Option(p.name, p.id));
   }
-  const requested = new URLSearchParams(location.search).get("project");
-  const p = dataset.projects.find(item => item.id === requested || item.site === requested);
+  const params = new URLSearchParams(location.search);
+  const requested = params.get("site") || params.get("project");
+  const p = dataset.projects.find(item => item.id === requested || item.site === requested ||
+                                         siteSlug(item.name) === requested);
   if (p) {
     byId("project-filter").value = p.id;
     byId("notice-site").value = p.id;
