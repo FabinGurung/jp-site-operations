@@ -22,7 +22,7 @@ const stubLeaflet = () => {
     marker(coords, options){return {bindPopup(){return this},on(type, fn){
       if (type==="click") this.handler = fn; return this;
     },addTo(){window.__qaMarkerCount++; window.__qaMarkers.push({
-      title:options.title, click:this.handler
+      title:options.title, icon:options.icon.html, click:this.handler
     });return this}}}
   };
 };
@@ -40,6 +40,13 @@ async function statusInfo(page){
     filter:document.querySelector("#status-filter").value,
     active:[...document.querySelectorAll("[data-project-status][aria-pressed=true]")].map(e=>e.dataset.projectStatus),
     summary:document.querySelector("#status-filter-summary").textContent,
+  }));
+}
+async function markerColours(page) {
+  return page.evaluate(() => window.__qaMarkers.map(marker => {
+    const holder = document.createElement("div");
+    holder.innerHTML = marker.icon;
+    return {title:marker.title, colour:holder.firstElementChild.style.getPropertyValue("--company-colour")};
   }));
 }
 (async()=>{
@@ -63,6 +70,18 @@ async function statusInfo(page){
     const counts = await mobile.locator("[data-status-count]").allTextContents();
     assert.deepEqual(counts,["5","1","1","1","1","1"]);
     check("390px phone shows six accessible source-counted buttons, five approved pins and hidden desktop select");
+    const colours = await markerColours(mobile);
+    assert.equal(colours.find(p=>p.title.includes("Demo construction")).colour,"#246b9a");
+    assert.equal(colours.find(p=>p.title.includes("Demo approval")).colour,"#a94b10");
+    assert.equal(colours.find(p=>p.title.includes("Demo status hidden")).colour,"#667775");
+    assert.equal(await mobile.locator("#company-legend li").count(),3);
+    assert.ok(!(await mobile.locator("#company-legend").textContent()).includes("PRIVATE ORGANIZATION"));
+    await mobile.locator("#company-filter").selectOption("ORG-000002");
+    assert.equal((await statusInfo(mobile)).pins,1);
+    assert.equal(await mobile.locator("#company-legend li").count(),1);
+    assert.equal((await markerColours(mobile))[0].colour,"#a94b10");
+    await mobile.locator("#reset-filters").click();
+    check("company colours and filtered legend preserve public names and neutral private-organization fallback");
 
     for(const [status,count] of [["Completed",1],["Approval",1],["Construction",1],["Maintenance",1],["unpublished",1],["all",5]]){
       await mobile.locator('[data-project-status="'+status+'"]').click();
@@ -84,6 +103,7 @@ async function statusInfo(page){
     await mobile.locator(".advanced-map-settings summary").click();
     await mobile.locator('[data-map-mode="work"]').click();
     assert.equal((await statusInfo(mobile)).projectCount,"1");
+    assert.equal((await markerColours(mobile))[0].colour,"#a94b10");
     check("keyboard activation and map-layer switching preserve status");
 
     await mobile.locator("#reset-filters").click();
