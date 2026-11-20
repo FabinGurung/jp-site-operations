@@ -175,3 +175,13 @@ See [`ops/control/daily-slack-web-cycle.json`](ops/control/daily-slack-web-cycle
 ## A9-CWO — Communication & Web Operations
 
 **A9-CWO** supersedes the user-facing A9-SWO nickname. It represents a multi-source operating cycle (governed Slack, two-channel Discord Colab and future admitted providers), **not a new Discord/Slack bot account**. See the [pinned storage and daily pipeline](controls/storage.html), machine contract `ops/control/storage-routing-rules.json`, and [two-channel Discord Colab](ops/discord/A9_CWO_DISCORD_TWO_CHANNEL_DAILY_COLLECTOR_v1.0.ipynb). An operator runs the Discord notebook before daily reconciliation and the run must report Discord `PASS/PARTIAL/NOT_RUN`. Full historical Discord server harvesting is out of scope. Storage assignment is by original evidence / normalized truth / binary file / human projection, not by channel brand.
+
+
+## Authoritative source-first publishing contract (v3.4)
+
+- **Content:** only the original live Google Sheets and reviewed, A7-versioned Google Docs in the Drive [GPT collection](https://drive.google.com/drive/folders/19U0hYyijCLEGSRp4CGR2jSh7GgjJCgP2) own operational facts and their semantic interpretations.
+- **Source index:** [Master semantic Google Doc](https://docs.google.com/document/d/1tLhw31P5nrrexLpYKz7-05cKXRDfz4bWlvyNcQAAHs4/edit) maps seven owning Sheets to their semantic Docs. GitHub Actions double-reads Sheets and verifies Docs content read-only; source IDs in Python are a fixture-only default, not public row data.
+- **Website:** `publication/operations/` holds HTML, CSS and JavaScript templates. `scripts/` validates source eligibility and creates an ephemeral public-only JSON projection for GitHub Pages. Generated `_site` content is **never** authoritative and must not be manually edited or committed as data.
+- **Edits:** change Google Sheets/Docs to change the actual project/site content, under A7 PRE/POST and human review. Change this repository only for page layout, field display logic, validation rules, or the reviewed workflow. Never mirror private original rows into the repository.
+- **AI:** Docs supply semantics for AI-assisted interpretation, but no unattended LLM decision engine is enabled. Source quote matching, version SHA checks and publication permissions are deterministic. Unreviewed notes cannot be promoted into published facts.
+- **Fallback:** when Docs API access fails, keep the last successfully deployed public Pages and repair or manually review the original Google Docs/Sheets before retrying; never publish fixture data.
