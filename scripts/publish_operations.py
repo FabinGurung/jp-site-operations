@@ -2,12 +2,14 @@
 import argparse
 import csv
 import json
+import os
 import re
 import shutil
 from datetime import date
 from pathlib import Path
 
 from notification_projection import compile_notifications, records as notification_records
+from docs_semantic_read import read_semantic_sources, verify_registered_google_docs
 from sheets_read import ROOT, load_tables, records
 
 SOURCES = {
@@ -73,18 +75,19 @@ def reviewed_closure(row, record_id):
             "date": str(row["closure_date"]).strip()}
 
 
-def verify_directory(tables):
+def verify_directory(tables, source_map=None):
     """Fail closed if the live published directory no longer points to the owning Sheets.
 
     The directory is a pointer-only dependency, NEVER a public data master.
     No joined site data, payments, workforce, coordinates or source messages
     from its other 35 tabs are fetched or projected.
     """
+    source_map = source_map or SOURCES
     directory = {}
     for row in records(tables["directory"], "subject", "google_sheet", "data_or_view"):
         tab = row["data_or_view"]
         # Directory includes many other private/review-only sources. Ignore them.
-        for key, (sheet_id, wanted_tab) in SOURCES.items():
+        for key, (sheet_id, wanted_tab) in source_map.items():
             if key == "directory" or tab != wanted_tab:
                 continue
             if key in directory:
@@ -93,7 +96,7 @@ def verify_directory(tables):
             if len(uri) != 2 or uri[1].split("/", 1)[0] != sheet_id:
                 raise ValueError("Source directory ID mismatch: " + key)
             directory[key] = sheet_id
-    expected = set(SOURCES) - {"directory"}
+    expected = set(source_map) - {"directory"}
     if set(directory) != expected:
         raise ValueError("Source directory missing original sources: " + ",".join(sorted(expected - set(directory))))
     return directory
@@ -110,8 +113,13 @@ def public_organization_names(tables):
     return labels
 
 
-def build(tables, out, received_at):
-    directory = verify_directory(tables)
+def build(tables, out, received_at, source_map=None, semantic_report=None):
+    source_map = source_map or SOURCES
+    semantic_report = semantic_report or {"status": "FIXTURE_NOT_EVALUATED",
+                                         "contract_count": 0,
+                                         "registered_google_docs": 0,
+                                         "quotes_verified": 0}
+    directory = verify_directory(tables, source_map)
     organization_names = public_organization_names(tables)
     # Live public identities come exclusively from the Projects and Locations
     # Sheet. Historical Git snapshots are archival comparisons, not inputs.
@@ -272,11 +280,15 @@ def build(tables, out, received_at):
                                 "Notification Center - Message Sources",
                                 "Notification Center - Instructions", "Project Work",
                                 "Companies and Organizations", "Website Publishing and Source Directory"],
-            "live_workbook_count": len(SOURCES),
+            "live_workbook_count": len(source_map),
             "organization_authority": "Companies and Organizations / organizations",
             "directory_role": "READ_ONLY_SOURCE_POINTER_VALIDATION",
             "directory_verified_inputs": sorted(directory),
             "source_authority": "GOOGLE_SHEETS",
+            "semantic_contracts": semantic_report["contract_count"],
+            "semantic_google_docs_status": semantic_report["status"],
+            "registered_google_docs_checked": semantic_report.get("registered_google_docs", 0),
+            "reviewed_google_doc_quotes_checked": semantic_report.get("quotes_verified", 0),
             "direct_slack_collector": "NOT_CONNECTED_TO_THIS_PUBLISHER",
             "direct_discord_collector": "ON_HOLD",
             "legacy_notification_visibility": "DRIVE_GALLERY_ONLY__NOT_SOURCE_CLOSURE",
@@ -386,7 +398,9 @@ def build(tables, out, received_at):
         "batch_scope": "EXISTING_SHEETS_RECONCILIATION_NOT_NEW_PROVIDER_INGEST",
         "readback_at_npt": received_at,
         "source_counts": {
-            "workbooks": len(SOURCES),
+            "workbooks": len(source_map),
+            "semantic_contracts": semantic_report["contract_count"],
+            "registered_google_docs_checked": semantic_report.get("registered_google_docs", 0),
             "project_rows": len(list(records(tables["projects"], "project_id"))),
             "publication_settings": len(list(records(tables["choices"], "publication_setting_id"))),
             "message_sources": len(list(records(tables["messages"], "source_id"))),
@@ -452,5 +466,22 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--fixture", type=Path)
     args = parser.parse_args()
-    tables, stamp = load_tables(SOURCES, args.fixture)
-    print("Projects, notifications and progress:", *build(tables, args.output, stamp))
+    if args.fixture:
+        source_map = SOURCES
+        semantic_report = None  # Offline fixtures never connect to Google.
+        tables, stamp = load_tables(source_map, args.fixture)
+    else:
+        token = os.getenv("GOOGLE_ACCESS_TOKEN")
+        if not token:
+            raise RuntimeError("Read-only Google token required for Docs and Sheets")
+        # Google Docs index owns the live Sheet pointers and field semantics.
+        source_map, semantic_report = read_semantic_sources(token, SOURCES)
+        # The original Sheets remain authoritative for all row data.
+        tables, stamp = load_tables(source_map, None)
+        # Verify a registered Google Doc's original POST snapshot digest
+        # and every published quote against its actual documented text.
+        semantic_report.update(verify_registered_google_docs(tables, token))
+    print("Projects, notifications and progress:",
+          *build(tables, args.output, stamp, source_map, semantic_report))
+    if semantic_report:
+        print("Verified semantic Google Docs:", semantic_report)

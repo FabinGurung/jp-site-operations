@@ -6,6 +6,9 @@ on:
       - 'docs/releases/v3.3.0.md'
       - 'docs/releases/v3.4.0.md'
       - '.github/workflows/operations-milestone-release.yml'
+  workflow_run:
+    workflows: ["Operations from Google Sheets"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       tag:
@@ -17,7 +20,7 @@ permissions:
   contents: write
 jobs:
   release:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'workflow_run'
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
@@ -28,6 +31,7 @@ jobs:
         run: |
           python -m unittest discover -s scripts -p 'test_ops_publication.py' -v
           python scripts/validate_branch_registry.py
+          python -m unittest discover -s scripts -p 'test_ops_semantic_docs.py' -v
       - name: Tag approved baseline or retrofit milestone
         env:
           GH_TOKEN: ${{ github.token }}
@@ -39,7 +43,11 @@ jobs:
           if [ "$EVENT" = "workflow_dispatch" ]; then
             tags="$REQUESTED"
           else
-            tags="v3.3.0 v3.4.0"
+            tags="v3.3.0"
+          fi
+          if [ "$tags" = "v3.4.0" ]; then
+            echo "::error::v3.4.0 must be released by a successfully deployed Google Docs + Sheets Pages workflow"
+            exit 1
           fi
           for tag in $tags; do
             notes="docs/releases/$tag.md"
@@ -62,3 +70,41 @@ jobs:
               --title "JP Site Operations — $tag" --notes-file "$notes"
             echo "Created immutable release $tag at $GITHUB_SHA"
           done
+
+  release-after-deployment:
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Publish approved semantic milestone only after Pages deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN: ${{ github.event.workflow_run.id }}
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          notes="docs/releases/v3.4.0.md"
+          test -f "$notes" || { echo 'Semantic release notes not published yet'; exit 0; }
+          if gh release view v3.4.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Existing immutable v3.4.0 release retained'
+            exit 0
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN/jobs?per_page=100" \
+            --jq '.jobs[] | [.name, .conclusion] | @tsv' > /tmp/release-jobs
+          grep -Fxq $'project\tsuccess' /tmp/release-jobs || { echo 'Source projection not confirmed'; exit 0; }
+          grep -Fxq $'deploy\tsuccess' /tmp/release-jobs || { echo 'Pages deployment not confirmed'; exit 0; }
+          python -m unittest discover -s scripts -p 'test_ops_semantic_docs.py' -v
+          gh release create v3.4.0 --repo "$GITHUB_REPOSITORY" --target "$SOURCE_SHA" \
+            --title 'JP Site Operations — Google Sheets + Semantic Google Docs v3.4.0' \
+            --notes-file "$notes"
+          echo "v3.4.0 deployed and tagged at $SOURCE_SHA"

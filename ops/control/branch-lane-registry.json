@@ -988,6 +988,29 @@
         "scripts/validate_branch_registry.py",
         "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md"
       ]
+    },
+    {
+      "branch_id": "OPS-SYS-SEMANTIC-DOCS-R14",
+      "branch_name": "feature/operations-semantic-docs-r14-20261120",
+      "status": "ACTIVE_FEATURE_LANE",
+      "allowed_for_work": true,
+      "requires_pull_request": true,
+      "merge_base": "main",
+      "direct_pages_deploy": false,
+      "purpose": "2026-11-20 Google Docs indexed semantic read-only contracts + original Google Sheet publishing",
+      "allowed_paths": [
+        "scripts/docs_semantic_read.py",
+        "scripts/test_ops_semantic_docs.py",
+        "scripts/publish_operations.py",
+        ".github/workflows/operations-sheets-pages.yml",
+        ".github/workflows/operations-milestone-release.yml",
+        "docs/releases/v3.4.0.md",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "README.md",
+        "AGENTS.md",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py"
+      ]
     }
   ]
 }
