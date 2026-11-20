@@ -9,7 +9,8 @@ def add_live_source_fixtures(tables):
     tables["organizations"] = [
         ["Organization ID", "Organization Name", "Is Public", "Active", "Data Quality Status"],
         ["ORG-000001", "Fishtail Builders Pvt Ltd", True, True, "VALID"],
-        ["ORG-000002", "PRIVATE ORGANIZATION NAME", False, True, "VALID"],
+        ["ORG-000002", "Rohini Engineering and Builders Pvt Ltd", True, True, "VALID"],
+        ["ORG-999999", "PRIVATE ORGANIZATION NAME", False, True, "VALID"],
     ]
     tables["directory"] = [
         ["Subject", "Google Sheet", "Data or View"],
@@ -39,7 +40,8 @@ scenarios = [
     ("PRJ-999906", "Completed", False, True, "PRIVATE DEMO MUST NEVER PUBLISH"),
 ]
 for i, (pid, status, is_public, show_status, name) in enumerate(scenarios):
-    projects.append([pid, is_public, name, "VALID", "ORG-000001",
+    company = "ORG-000002" if i == 2 else "ORG-999999" if i == 4 else "ORG-000001"
+    projects.append([pid, is_public, name, "VALID", company,
                      28.20 + i * .004, 83.98 + i * .004, status, str(i + 1), "", "2026-11-12"])
     choices.append(["PPS-QA-" + str(i), pid, True, True, True, show_status])
 
@@ -113,5 +115,6 @@ update_path.write_text(json.dumps(update, indent=2), encoding="utf-8")
 body = (out / "operations.json").read_text(encoding="utf-8")
 assert "HIDDEN_RAW_STATUS_DO_NOT_PUBLISH" not in body
 assert "PRIVATE DEMO MUST NEVER PUBLISH" not in body
+assert "PRIVATE ORGANIZATION NAME" not in body
 assert '"status": ""' in body
 print("STATUS_FIXTURE_PASS: five synthetic public projects, hidden status never leaks")

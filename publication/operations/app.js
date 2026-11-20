@@ -77,6 +77,35 @@ const mapReading = p => {
   return {badge:"•", note:p.status || "Published project listing · no public status", kind:"location"};
 };
 const hasPin = p => Number.isFinite(p.lat) && Number.isFinite(p.lng);
+// Colours describe the public executing organization, independently of map layer.
+// Company identity/labels still come only from the approved Sheets projection.
+const companyColour = p => {
+  if (!p.company_id || !p.company) return "#667775";
+  const known = {"ORG-000001":"#246b9a", "ORG-000002":"#a94b10"};
+  if (known[p.company_id]) return known[p.company_id];
+  let hash = 0;
+  for (const c of p.company_id) hash = (Math.imul(hash, 31) + c.charCodeAt(0)) >>> 0;
+  return "hsl(" + Math.round(((hash % 360) * 137.508) % 360) + " 62% 32%)";
+};
+function renderCompanyLegend(projects) {
+  const groups = new Map();
+  for (const p of projects.filter(hasPin)) {
+    const key = p.company_id && p.company ? p.company_id : "";
+    if (!groups.has(key)) groups.set(key, {project:p, count:0});
+    groups.get(key).count++;
+  }
+  const items = [...groups.values()]
+    .sort((a, b) => (a.project.company || "").localeCompare(b.project.company || ""))
+    .map(({project:p, count}) => {
+      const item = make("li", "", "company-legend-item");
+      const swatch = make("span", "", "company-swatch");
+      swatch.style.backgroundColor = companyColour(p);
+      swatch.setAttribute("aria-hidden", "true");
+      return withChildren(item, swatch, make("span", (p.company || "Organization not public") +
+        " · " + count + (count === 1 ? " mapped site" : " mapped sites")));
+    });
+  byId("company-legend").replaceChildren(...items);
+}
 const readable = value => String(value || "").replaceAll("_", " ").trim();
 const projectName = id => (dataset.projects.find(p => p.id === id) || {}).name || "Selected site";
 const selectedProject = () => activeSiteId || byId("project-filter").value;
@@ -121,6 +150,7 @@ function clearSiteSelection(goToMap = true, allSites = false) {
 }
 
 function drawMap(projects) {
+  renderCompanyLegend(projects);
   if (!window.L) {
     byId("map-fallback").hidden = false;
     return;
@@ -140,13 +170,15 @@ function drawMap(projects) {
   for (const p of projects.filter(hasPin)) {
     const info = mapReading(p);
     const badge = make("span", info.badge, "site-map-badge " + info.kind);
+    badge.style.setProperty("--company-colour", companyColour(p));
+    const company = p.company || "Organization not public";
     const marker = L.marker([p.lat, p.lng], {
-      title: p.name + " — " + info.note,
-      alt: p.name + " — " + info.note,
+      title: p.name + " — " + company + " — " + info.note,
+      alt: p.name + " — " + company + " — " + info.note,
       icon: L.divIcon({html: badge.outerHTML, className: "site-map-pin", iconSize: [48, 48], iconAnchor:[24, 46]})
     });
     const popup = make("div", "", "site-map-popup");
-    withChildren(popup, make("strong", p.name), make("p", info.note));
+    withChildren(popup, make("strong", p.name), make("p", company), make("p", info.note));
     const entries = projectRecords(p.id);
     popup.append(make("p", entries.work.length + " public reports · " + entries.notices.length + " reviewed instructions"));
     const select = make("button", "View notifications", "quiet");
