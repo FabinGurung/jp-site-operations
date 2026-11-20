@@ -1,0 +1,64 @@
+name: JP Operations — Approved Source-first Release Milestones
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/releases/v3.3.0.md'
+      - 'docs/releases/v3.4.0.md'
+      - '.github/workflows/operations-milestone-release.yml'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Exact approved release notes tag
+        type: choice
+        options: [v3.3.0, v3.4.0]
+        required: true
+permissions:
+  contents: write
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify source contracts and branch governance
+        run: |
+          python -m unittest discover -s scripts -p 'test_ops_publication.py' -v
+          python scripts/validate_branch_registry.py
+      - name: Tag approved baseline or retrofit milestone
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED: ${{ inputs.tag }}
+          EVENT: ${{ github.event_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            tags="$REQUESTED"
+          else
+            tags="v3.3.0 v3.4.0"
+          fi
+          for tag in $tags; do
+            notes="docs/releases/$tag.md"
+            test -f "$notes" || continue
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              echo "Existing immutable release $tag retained"
+              continue
+            fi
+            # The baseline must not be fabricated on unrelated later commits.
+            if [ "$tag" = "v3.3.0" ] && [ "$EVENT" != "workflow_dispatch" ] &&
+               ! git show --format= --name-only HEAD | grep -Fxq "$notes"; then
+              continue
+            fi
+            if [ "$tag" = "v3.4.0" ] &&
+               ! git show --format= --name-only HEAD | grep -Fxq "$notes"; then
+              echo "v3.4 release requires notes in the current reviewed commit"
+              continue
+            fi
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --title "JP Site Operations — $tag" --notes-file "$notes"
+            echo "Created immutable release $tag at $GITHUB_SHA"
+          done
