@@ -31,6 +31,9 @@ on:
       - 'ops/control/branch-lane-registry.json'
       - 'docs/operations/LIVE_PROJECT_IDENTITY_AND_SOURCE_DATES.md'
       - 'scripts/publish_operations.py'
+      - 'scripts/docs_semantic_read.py'
+      - 'scripts/test_ops_semantic_docs.py'
+      - 'docs/releases/v3.4.0.md'
       - 'scripts/notification_projection.py'
       - 'scripts/sheets_read.py'
       - 'scripts/test_ops_publication.py'
@@ -69,6 +72,9 @@ on:
       - 'ops/control/branch-lane-registry.json'
       - 'docs/operations/LIVE_PROJECT_IDENTITY_AND_SOURCE_DATES.md'
       - 'scripts/publish_operations.py'
+      - 'scripts/docs_semantic_read.py'
+      - 'scripts/test_ops_semantic_docs.py'
+      - 'docs/releases/v3.4.0.md'
       - 'scripts/notification_projection.py'
       - 'scripts/sheets_read.py'
       - 'scripts/test_ops_publication.py'
@@ -104,6 +110,7 @@ jobs:
       - run: node --check publication/operations/closed-work.js
       - run: node --check scripts/status_filter_browser_qa.cjs
       - run: python -m unittest discover -s scripts -p 'test_ops_publication.py' -v
+      - run: python -m unittest discover -s scripts -p 'test_ops_semantic_docs.py' -v
       - run: python scripts/validate_ops_source_memory.py
 
   browser-status-qa:
@@ -169,10 +176,12 @@ jobs:
           workload_identity_provider: ${{ vars.JP_GOOGLE_MAIN_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.JP_GOOGLE_SERVICE_ACCOUNT }}
           token_format: access_token
-          access_token_scopes: https://www.googleapis.com/auth/spreadsheets.readonly
+          access_token_scopes: |
+            https://www.googleapis.com/auth/spreadsheets.readonly
+            https://www.googleapis.com/auth/documents.readonly
           create_credentials_file: false
           export_environment_variables: false
-      - name: Read Sheets and build public files
+      - name: Verify semantic Google Docs and original Sheets; build public Pages files
         env:
           GOOGLE_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
         run: python scripts/publish_operations.py --output _site
