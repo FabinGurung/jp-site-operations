@@ -1,9 +1,9 @@
 # Operations Source & Decision Memory Wall
 
-**Updated 14 November 2026 (Asia/Kathmandu).** This is the Operations source/decision protocol. It does not duplicate an editable project, progress or workforce database. See the [machine ledger](../../ops/control/operations-source-decision-ledger.v1.json).
+**Source-folder location updated 21 November 2026 (Asia/Kathmandu); historical decisions below retained.** This is the Operations source/decision protocol. It does not duplicate an editable project, progress or workforce database. See the [machine ledger](../../ops/control/operations-source-decision-ledger.v1.json).
 
 ## 1. Canonical provider route — current SHEETS_V2 authority
-Original files are located under [02 Website Sheets and Registers](https://drive.google.com/drive/folders/1QHxD74egNFeQAmvDJzvKmDxEQUOH3Kq6) → [01 Website Source Sheets — Edit Here](https://drive.google.com/drive/folders/1u4Rg1J3KSZRPnkjlAHOVxpWoq2skRICn).
+The authoritative original Google Sheets were **reorganized without changing their permanent file IDs or formulas**. [Operations-owned live Sheets](https://drive.google.com/drive/folders/1B5ORqVWFhV28KUuMWDKmqerzw2GjjNok) contain Website Display Choices, Notification Instructions, Message Sources and Project Work. [A7 canonical identity Sheets](https://drive.google.com/drive/folders/1EwnYTTtNgYUNQoFqbJySgyhxU0iN73Oi) contain Projects and Locations and Companies and Organizations. The seventh exact-ID readback, [Website Publishing and Source Directory — LIVE](https://drive.google.com/drive/folders/1DRECcxUaz68mS_WPWbvReKxujmZ2O58t), remains in the original shared 02 Website Publishing folder. [Other project-section and company location reference Sheets](https://drive.google.com/drive/folders/1Mhmr1MMxW9mS5jyuCBX8VEA-D7hHZuKD) are not part of the seven authenticated production read tables. The retired flat source folder was moved to Archive Gallery, not deleted. [Full A7 repository ownership map](https://github.com/FabinGurung/jp-a7-system-registry/blob/main/docs/DRIVE_REPOSITORY_SOURCE_OWNERSHIP_20261121.md) and [private move register](https://docs.google.com/document/d/1M5NcrNmiPf7d9lsLMdNUaJkw7sUzxDg_GZlfwl-ic7A/edit) record the change.
 
 | Fact class | Original Google Sheet (edit there) | Tab | What may be published |
 | --- | --- | --- | --- |
