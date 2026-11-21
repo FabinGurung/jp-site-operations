@@ -99,7 +99,8 @@ system_bases={"system/notification-center": "feature/daily-ops-current-work", "s
               "feature/clean-site-archive-copy-r11-20261118": "main",
               "feature/company-map-colours-r12-20261120": "main",
               "feature/operations-gpt-baseline-v330-20261120": "main",
-              "feature/operations-semantic-docs-r14-20261120": "main"}
+              "feature/operations-semantic-docs-r14-20261120": "main",
+              "docs/drive-rehome-20261121": "main"}
 for lane in system_lanes:
     name=lane.get("branch_name","")
     if (name not in system_bases or lane.get("allowed_for_work") is not True
