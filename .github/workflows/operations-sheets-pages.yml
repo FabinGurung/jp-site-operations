@@ -179,12 +179,15 @@ jobs:
           access_token_scopes: |
             https://www.googleapis.com/auth/spreadsheets.readonly
             https://www.googleapis.com/auth/documents.readonly
+            https://www.googleapis.com/auth/drive.readonly
           create_credentials_file: false
           export_environment_variables: false
       - name: Verify semantic Google Docs and original Sheets; build public Pages files
         env:
           GOOGLE_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
         run: python scripts/publish_operations.py --output _site
+      - name: Install the registered Google Drive source gallery
+        run: python3 .github/source-gallery/install.py _site jp-site-operations
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

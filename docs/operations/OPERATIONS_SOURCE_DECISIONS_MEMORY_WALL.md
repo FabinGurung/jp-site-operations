@@ -167,3 +167,7 @@ User's authoritative boundary: Google Sheets and Google Docs own content and sem
 **Live manual-AI fallback:** If automated Docs read is unavailable, use ChatGPT to read the same live Doc and Sheets with authorization, make an A7 PRE snapshot, update the original Google Docs/Sheets under the appropriate existing owner, POST/QA them, and then rerun the vetted Actions workflow; never replace originals with repository data or cached fixtures. A missing document/contract should fail closed at publication so the previously deployed Pages stay visible.
 
 **Boundaries:** Publication may verify a versioned Google Doc POST source's full SHA256/byte count and each published quote against that actual original. Do not treat published instructions as site completion. All private names, reviewer notes, materials, costs and source content are excluded from Pages unless already explicitly approved public-safe by the owner. The 22 historical Kharika instructions remain Drive-only, not completed. This change does not touch CAD, schedules or Cost Estimation repositories.
+
+## 23 November 2026 — Google Drive sources in the Pages header
+
+The header gallery opens the public source directory and navigates to registered sources through signed-in Drive. The read-only publisher can use the Drive text export when the Google Docs endpoint rejects the existing reader. The same semantic source checks, source digests and reviewed-quote checks still apply before publishing.
