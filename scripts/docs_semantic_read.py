@@ -15,10 +15,15 @@ from urllib.request import Request, urlopen
 
 INDEX_DOC_ID = "1tLhw31P5nrrexLpYKz7-05cKXRDfz4bWlvyNcQAAHs4"
 DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{20,}$")
+MAX_DOC_BYTES = 2_000_000
 VALID_ROLES = frozenset({
     "projects", "choices", "messages", "notices",
     "progress", "organizations", "directory",
 })
+
+
+class DriveTextExport(str):
+    """Drive's plain text representation, without the final Docs line breaks."""
 
 
 def _body_text(content):
@@ -78,16 +83,16 @@ def read_doc_export(doc_id, token):
            + "/export?mimeType=text%2Fplain")
     try:
         with urlopen(Request(uri, headers={"Authorization": "Bearer " + token}), timeout=30) as response:
-            raw = response.read(2_000_001)
+            raw = response.read(MAX_DOC_BYTES + 1)
     except (HTTPError, URLError, TimeoutError) as error:
         code = getattr(error, "code", type(error).__name__)
         raise RuntimeError(f"Google Doc export failed ({code})") from None
-    if len(raw) > 2_000_000:
+    if len(raw) > MAX_DOC_BYTES:
         raise ValueError("Semantic Google Doc export is too large")
-    text = raw.decode("utf-8-sig")
+    text = raw.decode("utf-8-sig").replace("\r\n", "\n")
     if not text.strip():
         raise ValueError("Empty semantic Google Doc export")
-    return text
+    return DriveTextExport(text)
 
 
 def _block(text, begin, end):
@@ -188,11 +193,18 @@ def verify_registered_google_docs(tables, token, fetcher=read_doc):
         doc_id = _docs_id(row["saved_original"])
         _docs_id(row["source_message"])
         source_text = fetcher(doc_id, token)
-        digest = hashlib.sha256(source_text.encode("utf-8")).hexdigest()
+        source_bytes = source_text.encode("utf-8")
+        registered_size = row.get("text_bytes", "")
+        if isinstance(source_text, DriveTextExport) and registered_size.isdecimal():
+            expected_size = int(registered_size)
+            if len(source_bytes) < expected_size <= MAX_DOC_BYTES:
+                # Drive export omits terminal line breaks. The registered SHA-256
+                # below still requires an exact match to the reviewed original.
+                source_bytes += b"\n" * (expected_size - len(source_bytes))
+        digest = hashlib.sha256(source_bytes).hexdigest()
         if digest != row["source_sha256"].lower():
             raise ValueError("Reviewed Google Doc source digest mismatch")
-        byte_count = str(len(source_text.encode("utf-8")))
-        if row.get("text_bytes") and row["text_bytes"] != byte_count:
+        if registered_size and registered_size != str(len(source_bytes)):
             raise ValueError("Reviewed Google Doc byte count mismatch")
         originals[row["source_id"]] = source_text
     count = 0

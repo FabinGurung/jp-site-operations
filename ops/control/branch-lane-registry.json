@@ -1043,7 +1043,8 @@
         ".github/source-gallery/install.py",
         ".github/source-gallery/source-gallery.js",
         ".github/workflows/operations-sheets-pages.yml",
-        "scripts/docs_semantic_read.py"
+        "scripts/docs_semantic_read.py",
+        "scripts/test_ops_semantic_docs.py"
       ]
     }
   ]

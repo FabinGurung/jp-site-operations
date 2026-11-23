@@ -171,3 +171,5 @@ User's authoritative boundary: Google Sheets and Google Docs own content and sem
 ## 23 November 2026 — Google Drive sources in the Pages header
 
 The header gallery opens the public source directory and navigates to registered sources through signed-in Drive. The read-only publisher can use the Drive text export when the Google Docs endpoint rejects the existing reader. The same semantic source checks, source digests and reviewed-quote checks still apply before publishing.
+
+The Drive text export uses Windows line endings and omits terminal line breaks. The publisher reconstructs those line breaks from the saved byte count and requires the stored SHA-256 to match the reviewed original before publishing.
