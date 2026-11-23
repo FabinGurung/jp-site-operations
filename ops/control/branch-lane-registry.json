@@ -1026,6 +1026,25 @@
         "ops/control/branch-lane-registry.json",
         "scripts/validate_branch_registry.py"
       ]
+    },
+    {
+      "branch_id": "OPS-SYS-DRIVE-SOURCE-GALLERY-R16",
+      "branch_name": "pages/google-drive-source-gallery-20261123",
+      "status": "ACTIVE_FEATURE_LANE",
+      "allowed_for_work": true,
+      "requires_pull_request": true,
+      "merge_base": "main",
+      "direct_pages_deploy": false,
+      "purpose": "Pages source navigation and read-only Google Doc export fallback with existing source validation.",
+      "allowed_paths": [
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        ".github/source-gallery/install.py",
+        ".github/source-gallery/source-gallery.js",
+        ".github/workflows/operations-sheets-pages.yml",
+        "scripts/docs_semantic_read.py"
+      ]
     }
   ]
 }
