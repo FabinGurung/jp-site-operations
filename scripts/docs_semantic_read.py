@@ -63,10 +63,31 @@ def read_doc(doc_id, token):
     try:
         with urlopen(Request(uri, headers={"Authorization": "Bearer " + token}), timeout=30) as response:
             payload = json.load(response)
+    except HTTPError as error:
+        if error.code != 403:
+            raise RuntimeError(f"Google Doc read failed ({error.code})") from None
+        return read_doc_export(doc_id, token)
+    except (URLError, TimeoutError) as error:
+        raise RuntimeError(f"Google Doc read failed ({type(error).__name__})") from None
+    return extract_doc_text(payload)
+
+
+def read_doc_export(doc_id, token):
+    """Use the read-only Drive export if the Docs endpoint rejects this reader."""
+    uri = ("https://www.googleapis.com/drive/v3/files/" + doc_id
+           + "/export?mimeType=text%2Fplain")
+    try:
+        with urlopen(Request(uri, headers={"Authorization": "Bearer " + token}), timeout=30) as response:
+            raw = response.read(2_000_001)
     except (HTTPError, URLError, TimeoutError) as error:
         code = getattr(error, "code", type(error).__name__)
-        raise RuntimeError("Google Doc read failed (" + str(code) + ")") from None
-    return extract_doc_text(payload)
+        raise RuntimeError(f"Google Doc export failed ({code})") from None
+    if len(raw) > 2_000_000:
+        raise ValueError("Semantic Google Doc export is too large")
+    text = raw.decode("utf-8-sig")
+    if not text.strip():
+        raise ValueError("Empty semantic Google Doc export")
+    return text
 
 
 def _block(text, begin, end):
