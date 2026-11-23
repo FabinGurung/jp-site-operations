@@ -1,8 +1,10 @@
 """Offline semantic Docs reader and immutable source-provenance checks."""
 import hashlib
+import io
 import unittest
+from unittest.mock import patch
 
-from docs_semantic_read import (VALID_ROLES, INDEX_DOC_ID, extract_doc_text,
+from docs_semantic_read import (VALID_ROLES, INDEX_DOC_ID, extract_doc_text, read_doc_export,
                                 parse_index, parse_contract, read_semantic_sources,
                                 verify_registered_google_docs)
 
@@ -72,6 +74,29 @@ class SemanticDocsTest(unittest.TestCase):
         tables["notices"][1][-1] = "Material delivered and approved."
         with self.assertRaises(ValueError):
             verify_registered_google_docs(tables, "fixture", fetcher=f)
+
+    def test_drive_export_restores_line_endings_before_original_digest_check(self):
+        url = "https://docs.google.com/document/d/" + INDEX_DOC_ID + "/edit"
+        original = b"First line\nReviewed quote.\n\n"
+        messages = [
+            ["Source ID", "Origin", "Saved Original", "Source Message", "Source SHA256",
+             "Source Version", "Text Bytes"],
+            ["SRC-01", "Google Doc", url, url, hashlib.sha256(original).hexdigest(),
+             "V000001", str(len(original))],
+        ]
+        notices = [
+            ["Notification ID", "Source ID", "Review State", "Publish", "Source Quote"],
+            ["NTF-01", "SRC-01", "Reviewed", True, "Reviewed quote."],
+        ]
+        tables = {"messages": messages, "notices": notices}
+        exported = b"\xef\xbb\xbfFirst line\r\nReviewed quote."
+        with patch("docs_semantic_read.urlopen", return_value=io.BytesIO(exported)):
+            receipt = verify_registered_google_docs(tables, "fixture", fetcher=read_doc_export)
+        self.assertEqual(receipt, {"registered_google_docs": 1, "quotes_verified": 1})
+
+        with patch("docs_semantic_read.urlopen", return_value=io.BytesIO(exported.replace(b"First", b"Other"))):
+            with self.assertRaisesRegex(ValueError, "digest mismatch"):
+                verify_registered_google_docs(tables, "fixture", fetcher=read_doc_export)
 
 
 if __name__ == "__main__":
