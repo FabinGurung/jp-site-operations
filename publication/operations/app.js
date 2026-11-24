@@ -26,7 +26,12 @@ let map = null;
 let markerLayer = null;
 let mapMode = "activities";
 let statusFilter = "all";
-let noticeCategory = "all";
+let noticeCategory = "Work";
+let viewMode = "map";
+const mobileField = () => matchMedia("(max-width:900px)").matches;
+const fieldCategories = ["Work","Materials"];
+const fieldNotice = n => fieldCategories.includes(n.category);
+const preferredCategory = pid => dataset?.notices.some(n=> (!pid||n.project_id===pid)&&n.category==="Work") ? "Work" : dataset?.notices.some(n=>(!pid||n.project_id===pid)&&n.category==="Materials") ? "Materials" : "Work";
 let activeSiteId = "";
 let showAllNotices = false;
 let lastMapSignature = "";
@@ -34,11 +39,11 @@ let lastMapSignature = "";
 const statusKeys = ["Construction", "Completed", "Approval", "Maintenance"];
 const publishedStatus = p => statusKeys.includes(p.status) ? p.status : "unpublished";
 const statusLabel = key => ({
-  all:"All public sites", Construction:"Under construction",
+  all:"Current sites", Construction:"Under construction",
   Completed:"Completed", Approval:"Approval", Maintenance:"Maintenance",
   unpublished:"Not stated / other"
 })[key] || "Not stated / other";
-const matchesStatus = p => statusFilter === "all" || publishedStatus(p) === statusFilter;
+const matchesStatus = p => statusFilter === "all" ? (publishedStatus(p)!=="Completed" || p.id===selectedProject()) : publishedStatus(p)===statusFilter;
 function syncStatusControls() {
   byId("status-filter").value = statusFilter;
   for (const b of document.querySelectorAll("[data-project-status]"))
@@ -70,8 +75,7 @@ const mapReading = p => {
   const r = projectRecords(p.id);
   if (mapMode === "work") return {badge: r.work.length ? String(r.work.length) : "–",
     note: r.work.length + " published work reports · remaining work unknown", kind: "report"};
-  if (mapMode === "activities") return {badge: r.notices.length ? String(r.notices.length) : "–",
-    note: r.notices.length ? r.notices.length + " reviewed notifications · resolution not confirmed" : "No reviewed notifications", kind: r.notices.length ? "review notice-highlight" : "location notice-quiet"};
+  if (mapMode === "activities") {const count=r.notices.filter(fieldNotice).length;return {badge:count?String(count):"",note:count?count+" reviewed work/material notifications · resolution not confirmed":"No reviewed work/material notifications",kind:count?"review notice-highlight":"location notice-quiet"};}
   if (mapMode === "resources") return {badge:"?", note:"Material/equipment demand not connected", kind:"unknown"};
   if (mapMode === "manpower") return {badge:"?", note:"Crew-demand source not connected", kind:"unknown"};
   return {badge:"•", note:p.status || "Published project listing · no public status", kind:"location"};
@@ -121,11 +125,11 @@ const filteredNotices = () => dataset.notices.filter(r =>
 function chooseProject(id, focusMap = false, fromMap = false) {
   activeSiteId = id;
   showAllNotices = false;
-  statusFilter = "all";
+  if (!fromMap) statusFilter = "all";
   // Marker interaction retains all pins and the map camera.
   if (!fromMap) byId("project-filter").value = id;
   byId("notice-site").value = id;
-  noticeCategory = "all";
+  noticeCategory = mobileField() ? preferredCategory(id) : "all";
   syncStatusControls();
   render();
   const p = dataset.projects.find(project => project.id === id);
@@ -137,7 +141,7 @@ function chooseProject(id, focusMap = false, fromMap = false) {
 function clearSiteSelection(goToMap = true, allSites = false) {
   activeSiteId = "";
   showAllNotices = false;
-  noticeCategory = "all";
+  noticeCategory = mobileField() ? preferredCategory("") : "all";
   byId("project-filter").value = "";
   byId("notice-site").value = "";
   if (allSites) {
@@ -151,6 +155,7 @@ function clearSiteSelection(goToMap = true, allSites = false) {
 
 function drawMap(projects) {
   renderCompanyLegend(projects);
+  if(viewMode==="graph") return;
   if (!window.L) {
     byId("map-fallback").hidden = false;
     return;
@@ -176,7 +181,7 @@ function drawMap(projects) {
       zIndexOffset: info.kind.includes("notice-highlight") ? 500 : 0,
       title: p.name + " — " + company + " — " + info.note,
       alt: p.name + " — " + company + " — " + info.note,
-      icon: L.divIcon({html: badge.outerHTML, className: "site-map-pin", iconSize: [48, 48], iconAnchor:[24, 46]})
+      icon: L.divIcon({html: badge.outerHTML, className: "site-map-pin", iconSize: [44, 44], iconAnchor:[22, 22]})
     });
     const popup = make("div", "", "site-map-popup");
     withChildren(popup, make("strong", p.name), make("p", company), make("p", info.note));
@@ -199,6 +204,29 @@ function drawMap(projects) {
   map.invalidateSize();
 }
 
+function renderPlanningGraph(projects) {
+  const nodes=projects.map(p=>({p,counts:fieldCategories.map(category=>({category,count:dataset.notices.filter(n=>n.project_id===p.id&&n.category===category).length}))})).filter(x=>x.counts.some(c=>c.count));
+  const graph=nodes.map(({p,counts})=>{
+    const group=make("article","","graph-cluster");
+    const hub=make("button",p.name,"graph-hub");hub.type="button";hub.addEventListener("click",()=>chooseProject(p.id,false,true));
+    const branches=make("div","","graph-branches");
+    for(const {category,count} of counts.filter(c=>c.count)){
+      const node=make("button",category+" · "+count,"graph-node "+category.toLowerCase());
+      node.type="button";node.addEventListener("click",()=>{chooseProject(p.id,false,true);noticeCategory=category;renderNotifications();});
+      branches.append(node);
+    }
+    return withChildren(group,hub,branches);
+  });
+  safeList("graph-nodes",graph,"No reviewed work or material notifications for these sites.");
+}
+function setView(mode){
+  viewMode=mode;
+  byId("geo-view").setAttribute("aria-pressed",String(mode==="map"));
+  byId("graph-view").setAttribute("aria-pressed",String(mode==="graph"));
+  byId("map-canvas").hidden=mode==="graph";
+  byId("planning-graph").hidden=mode!=="graph";
+  render();
+}
 function updateProjectIndex(projects) {
   byId("project-count").textContent = String(projects.length);
   const nodes = projects.map(p => {
@@ -261,6 +289,7 @@ function noticeCard(n) {
 
 function renderNotifications() {
   const eligible = filteredNotices();
+  if(mobileField() && !fieldCategories.includes(noticeCategory)) noticeCategory=preferredCategory(selectedProject());
   const counts = {all:eligible.length, Work:0, Materials:0, Supervision:0};
   for (const n of eligible) if (Object.hasOwn(counts, n.category)) counts[n.category] += 1;
   for (const badge of document.querySelectorAll("[data-notice-count]"))
@@ -294,12 +323,12 @@ function render() {
   const progress = filteredProgress();
   const notices = filteredNotices();
   const eligible = dataset.projects.filter(p => !selectedCompany() || p.company_id === selectedCompany());
-  const tally = {"all":eligible.length,"Construction":0,"Completed":0,"Approval":0,"Maintenance":0,"unpublished":0};
+  const tally = {"all":eligible.filter(p=>publishedStatus(p)!=="Completed").length,"Construction":0,"Completed":0,"Approval":0,"Maintenance":0,"unpublished":0};
   for (const p of eligible) tally[publishedStatus(p)] += 1;
   for (const e of document.querySelectorAll("[data-status-count]"))
     e.textContent = String(tally[e.dataset.statusCount] ?? 0);
   for (const option of byId("status-filter").options) {
-    if (option.value === "all") option.textContent = "All statuses (" + tally.all + ")";
+    if (option.value === "all") option.textContent = "Current sites (" + tally.all + ")";
     else option.textContent = statusLabel(option.value) + " (" + (tally[option.value] || 0) + ")";
   }
   byId("status-filter-summary").textContent =
@@ -309,6 +338,7 @@ function render() {
 
   updateProjectIndex(projects);
   drawMap(projects);
+  if(viewMode==="graph") renderPlanningGraph(projects);
   updateContext();
   renderNotifications();
   const reviewedSites = new Set(progress.map(r => r.project_id)).size;
@@ -323,8 +353,8 @@ function render() {
           ? "Crew-demand register not connected · private attendance and payroll remain outside this map"
           : projects.filter(hasPin).length + " approved locations · " + reviewedSites + " sites have public work reports";
   byId("field-pulse").textContent = pulse;
-  const active = dataset.notices.filter(filterByProject);
-  byId("attention-count").textContent = new Set(active.map(n => n.project_id)).size + " sites · " + active.length + " reviewed notifications";
+  const active = dataset.notices.filter(n=>fieldNotice(n)&&filterByProject(n));
+  byId("attention-count").textContent = new Set(active.map(n => n.project_id)).size + " sites · " + active.length + " work / material notifications";
   byId("attention-count").setAttribute("data-notice-sites", String(new Set(active.map(n => n.project_id)).size));
   byId("map-mode-description").textContent = modeNotes[mapMode];
 }
@@ -333,6 +363,7 @@ function load(payload) {
   if (!payload || !Array.isArray(payload.projects) || !Array.isArray(payload.progress) ||
       !Array.isArray(payload.notices)) throw Error("Invalid Operations projection");
   dataset = payload;
+  noticeCategory=mobileField()?preferredCategory(""):"all";
   const companyLabels = new Map();
   for (const p of dataset.projects) if (p.company_id && p.company) companyLabels.set(p.company_id, p.company);
   for (const [id, name] of [...companyLabels].sort((a, b) => a[1].localeCompare(b[1])))
@@ -350,7 +381,9 @@ function load(payload) {
     byId("notice-site").value = p.id;
   }
   byId("receipt").textContent = payload.refreshed_at_npt || "Read time not supplied";
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)byId("scout-motion").textContent="Play Scout";
   activeSiteId = p?.id || "";
+  if(mobileField()) noticeCategory=preferredCategory(activeSiteId);
   showAllNotices = location.hash === "#notifications" && !activeSiteId;
   render();
 }
@@ -368,6 +401,7 @@ byId("status-filter").addEventListener("change", () => setStatusFilter(byId("sta
 byId("project-filter").addEventListener("change", () => {
   statusFilter = "all";
   activeSiteId = byId("project-filter").value;
+  noticeCategory=mobileField()?preferredCategory(activeSiteId):"all";
   showAllNotices = false;
   syncStatusControls();
   byId("notice-site").value = activeSiteId;
@@ -375,6 +409,7 @@ byId("project-filter").addEventListener("change", () => {
 });
 byId("notice-site").addEventListener("change", () => {
   activeSiteId = byId("notice-site").value;
+  noticeCategory=mobileField()?preferredCategory(activeSiteId):"all";
   statusFilter = "all";
   showAllNotices = !activeSiteId;
   byId("project-filter").value = activeSiteId;
@@ -393,8 +428,16 @@ byId("company-filter").addEventListener("change", () => {
 });
 byId("back-to-sites").addEventListener("click", () => clearSiteSelection(true,true));
 byId("clear-map-selection").addEventListener("click", () => clearSiteSelection(false,true));
+byId("geo-view").addEventListener("click",()=>setView("map"));
+byId("graph-view").addEventListener("click",()=>setView("graph"));
+byId("field-filter-toggle").addEventListener("click",()=>{
+  const open=document.body.classList.toggle("field-filters-open");
+  byId("field-filter-toggle").setAttribute("aria-expanded",String(open));
+});
 byId("scout-motion").addEventListener("click", () => {
-  const paused = byId("site-scout").classList.toggle("scout-paused");
+  const scout=byId("site-scout");
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches&&!scout.classList.contains("scout-force-motion")){scout.classList.add("scout-force-motion");scout.classList.remove("scout-paused");byId("scout-motion").textContent="Pause Scout";byId("scout-motion").setAttribute("aria-pressed","false");return;}
+  const paused = scout.classList.toggle("scout-paused");
   byId("scout-motion").setAttribute("aria-pressed", String(paused));
   byId("scout-motion").textContent = paused ? "Resume Scout" : "Pause Scout";
 });
@@ -420,7 +463,7 @@ byId("reset-filters").addEventListener("click", () => {
   byId("notice-site").value = "";
   activeSiteId = "";
   showAllNotices = false;
-  noticeCategory = "all";
+  noticeCategory = mobileField()?preferredCategory(""):"all";
   statusFilter = "all";
   syncStatusControls();
   render();

@@ -11,7 +11,7 @@
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script defer src="./app.js"></script>
 </head>
-<body>
+<body class="field-home">
 <a class="skip" href="#main">Skip to dashboard</a>
 <header class="north">
   <div class="brand"><span class="brand-icon" aria-hidden="true">▦</span><div><span class="eyebrow">A9 · Site operations</span><strong>JP Site <span>Operations</span></strong></div></div>
@@ -29,7 +29,7 @@
   <select id="project-filter"><option value="">All public projects</option></select>
   <label class="desktop-status-label" for="status-filter">Project status (as listed in Google Sheets)</label>
   <select id="status-filter" class="desktop-status-control" aria-describedby="status-source-hint">
-    <option value="all">All listed statuses</option>
+    <option value="all">Current (excludes completed)</option>
     <option value="Construction">Under construction</option>
     <option value="Completed">Completed</option>
     <option value="Approval">Approval</option>
@@ -49,6 +49,8 @@
   <span id="receipt" class="visually-hidden" role="status">Loading publication readback…</span>
   <section id="map" class="surface map-section" aria-labelledby="map-title">
     <div class="section-head"><div><span class="eyebrow">MAP · REVIEWED NOTIFICATIONS</span><h2 id="map-title">Project map</h2></div><p>Only sites with reviewed notifications are emphasized. Other sites remain available.</p></div>
+    <div class="field-toolbar"><div class="view-switch" role="group" aria-label="Site view"><button type="button" id="geo-view" aria-pressed="true">Map</button><button type="button" id="graph-view" aria-pressed="false">Planning graph</button></div><button type="button" id="field-filter-toggle" aria-expanded="false" aria-controls="field-filter-drawer">Filters</button></div>
+    <div id="field-filter-drawer" class="field-filter-drawer">
     <details class="advanced-map-settings"><summary>Map data layers</summary><div class="map-modes" role="group" aria-label="Choose site information layer">
       <button type="button" data-map-mode="projects" aria-pressed="false">Sites</button>
       <button type="button" data-map-mode="work" aria-pressed="false">Work</button>
@@ -57,7 +59,7 @@
     <div class="mobile-status-filter" aria-label="Filter sites by recorded project status">
       <div class="mobile-filter-heading"><strong>Show sites by status</strong><span>From Projects and Locations Sheet</span></div>
       <div class="status-chip-scroll" role="group" aria-label="Project status filter">
-        <button type="button" data-project-status="all" aria-pressed="true">All <span data-status-count="all">—</span></button>
+        <button type="button" data-project-status="all" aria-pressed="true">Current <span data-status-count="all">—</span></button>
         <button type="button" data-project-status="Construction" aria-pressed="false">Construction <span data-status-count="Construction">—</span></button>
         <button type="button" data-project-status="Completed" aria-pressed="false">Completed <span data-status-count="Completed">—</span></button>
         <button type="button" data-project-status="Approval" aria-pressed="false">Approval <span data-status-count="Approval">—</span></button>
@@ -73,13 +75,16 @@
       <p>In Notifications mode, quiet pins have no reviewed notices; numbered pins show reviewed notifications. Colours identify the executing organization.</p>
       <ul id="company-legend" aria-live="polite"></ul>
     </div>
-    <div class="attention-strip"><div><strong>Site Scout</strong><p id="attention-count" role="status">Reading reviewed notifications…</p></div><button id="scout-motion" class="scout-motion" type="button" aria-pressed="false">Pause Scout</button><a class="quiet-link" href="./sources.html">Edit sources</a></div>
+    <div class="scout-settings"><button id="scout-motion" class="scout-motion" type="button" aria-pressed="false">Pause Scout</button><a class="quiet-link" href="./sources.html">Data sources</a><a class="quiet-link" href="./extraction.html">Other reviewed records</a></div>
+    </div>
+    <p id="attention-count" class="field-attention" role="status">Reading reviewed notifications…</p>
     <div id="map-canvas" role="region" aria-label="Interactive project location map" tabindex="0"></div>
+    <section id="planning-graph" class="planning-graph" hidden aria-label="Reviewed notification relationships"><p class="graph-hint">Site → category. Connections show recorded notifications, not task dependencies or geographic routes.</p><div id="graph-nodes"></div></section>
     <p id="map-fallback" class="help" hidden>Map tiles are not available. Use the project navigator to browse all approved listings.</p>
 
   </section>
   <section id="notifications" class="surface notification-centre" hidden aria-labelledby="notifications-title">
-    <div class="section-head"><div><span class="eyebrow">PROJECT DETAILS · REVIEWED NOTIFICATIONS</span><h2 id="notifications-title" tabindex="-1">Notification Center</h2></div><span class="source-tag">Reviewed source records</span></div>
+    <div class="section-head"><div><span class="eyebrow">PROJECT DETAILS · REVIEWED NOTIFICATIONS</span><h2 id="notifications-title" tabindex="-1">Site instructions</h2></div><span class="source-tag">Reviewed source records</span></div>
     <div class="detail-actions"><button type="button" id="back-to-sites" aria-label="Back to all sites">← Back to all sites</button><a href="./extraction.html" id="site-progress-link">Site updates</a></div>
     <div id="context-card" class="context-card" aria-live="polite"></div>
     <div class="notice-dashboard">
@@ -90,10 +95,10 @@
       <label for="notice-site" class="notice-label">Show notifications for</label>
       <select id="notice-site" aria-describedby="notice-focus-detail"><option value="">All public sites</option></select>
       <div class="notice-category-tabs" role="group" aria-label="Filter notifications by recorded category">
-        <button type="button" data-notice-category="all" aria-pressed="true">All <span data-notice-count="all">—</span></button>
-        <button type="button" data-notice-category="Work" aria-pressed="false">Work <span data-notice-count="Work">—</span></button>
+        <button class="secondary-notice-tab" type="button" data-notice-category="all" aria-pressed="false">All <span data-notice-count="all">—</span></button>
+        <button type="button" data-notice-category="Work" aria-pressed="true">Work <span data-notice-count="Work">—</span></button>
         <button type="button" data-notice-category="Materials" aria-pressed="false">Materials <span data-notice-count="Materials">—</span></button>
-        <button type="button" data-notice-category="Supervision" aria-pressed="false">Supervision <span data-notice-count="Supervision">—</span></button>
+        <button class="secondary-notice-tab" type="button" data-notice-category="Supervision" aria-pressed="false">Supervision <span data-notice-count="Supervision">—</span></button>
       </div>
       <div id="notice-list" class="cards notice-list" aria-live="polite"><p>Loading reviewed notifications…</p></div>
       <p class="archive-route"><a href="https://drive.google.com/drive/folders/1Fu2Hsw-kmc83BpIxEe4C4jGB1qwKZ4wh">Earlier notifications in Google Drive</a> <span>Older instructions are preserved, not listed as current or marked completed.</span></p>
