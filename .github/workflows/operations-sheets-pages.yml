@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'publication/operations/**'
+      - '.github/source-gallery/**'
       - 'feasibility/index.html'
       - 'feasibility/buyer-guide/index.html'
       - 'feasibility/buyer-guide/guide.json'
@@ -44,6 +45,7 @@ on:
       - feature/daily-ops-current-work
     paths:
       - 'publication/operations/**'
+      - '.github/source-gallery/**'
       - 'feasibility/index.html'
       - 'feasibility/buyer-guide/index.html'
       - 'feasibility/buyer-guide/guide.json'
@@ -104,6 +106,7 @@ jobs:
         with:
           persist-credentials: false
       - run: node --check publication/operations/app.js
+      - run: node --check .github/source-gallery/source-gallery.js
       - run: node --check publication/operations/progress.js
       - run: node --check publication/operations/sources.js
       - run: node --check publication/operations/extraction.js

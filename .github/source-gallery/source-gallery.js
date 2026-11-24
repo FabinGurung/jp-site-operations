@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const config = {"cards": [{"title": "Website source directory", "kind": "Source directory", "url": "/jp-site-operations/sources.html"}, {"title": "Website Publishing and Source Directory", "kind": "Google Drive · sign in", "url": "https://drive.google.com/drive/u/0/search?q=Website%20Publishing%20and%20Source%20Directory"}, {"title": "Operations source Sheets and Docs", "kind": "Google Drive · sign in", "url": "https://drive.google.com/drive/u/0/search?q=jp-site-operations"}]};
+  const config = {"cards":[{"title":"Website source directory","kind":"Source directory","url":"/jp-site-operations/sources.html"},{"title":"Site Operations — Google Drive","kind":"Source root · sign in","url":"https://drive.google.com/drive/folders/1w5piZ3Pkn0NJ1JeQI-hCdowYGyFOx6BR"},{"title":"Live Project Map and Notifications","kind":"Google Drive · sign in","url":"https://drive.google.com/drive/folders/1B5ORqVWFhV28KUuMWDKmqerzw2GjjNok"},{"title":"Start Here — Sheets and Docs","kind":"Google Doc · sign in","url":"https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit"},{"title":"Website Publishing and Source Directory","kind":"Shared Google Sheet · sign in","url":"https://docs.google.com/spreadsheets/d/17y3ki0SLSG_Hmz8AipfWhhffnKastcjHvRqIdepJMu4/edit"}]};
   if (!config.cards?.length || document.querySelector('jp-source-gallery')) return;
 
   const component = document.createElement('jp-source-gallery');
