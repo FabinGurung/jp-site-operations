@@ -1,5 +1,9 @@
 # Global agent/router rule (public-safe)
 
+## Start here — scoped repository reading (24 November 2026)
+
+Read [Active repository tree and Google source map](docs/operations/ACTIVE_REPOSITORY_TREE.md) first for routine Operations tasks. Limit inspection to relevant production templates, importer, workflow, live source and tests. Do not recursively load archived material: skip all `99_VERSION_ARCHIVE` paths, frozen branches and historical releases unless the task explicitly requires them. Legacy compatibility/validation files are not live fact sources and should be inspected only for a relevant maintenance task. [Drive archive](https://drive.google.com/drive/folders/1ZSjf4fC2P3UXpTpog_fDEb_GqYz3H9be) preserves retired copies. No change to source ownership or approval rules.
+
 Central authoritative cross-provider bootstrap:
 https://github.com/FabinGurung/jp-a7-system-registry/blob/main/A9_GIT_DRIVE_BOOTSTRAP.json
 
