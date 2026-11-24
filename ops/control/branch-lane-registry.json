@@ -1172,6 +1172,21 @@
         "controls/memory-wall.html",
         "controls/storage.html"
       ]
+    },
+    {
+      "branch_id": "OPS-SYS-ESTIMATION-HANDOVER-R20",
+      "branch_name": "feature/estimating-site-progress-handover-20261124",
+      "status": "ACTIVE_FEATURE_LANE",
+      "allowed_for_work": true,
+      "requires_pull_request": true,
+      "merge_base": "main",
+      "direct_pages_deploy": false,
+      "purpose": "Owner-authorized transfer of site intake and daily progress authority; register exact branch and source ownership; preserve source records.",
+      "allowed_paths": [
+        "docs/estimating-site-progress-handover-20261124.md",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py"
+      ]
     }
   ]
 }
