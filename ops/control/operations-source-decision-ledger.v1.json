@@ -414,10 +414,10 @@
         "docs/operations/ACTIVE_REPOSITORY_TREE.md",
         "AGENTS.md"
       ],
-      "source_readback": "Drive source index and 29 native Sheet / Doc pairs verified; reviewed notice projection enforces Reviewed and Publish TRUE.",
+      "source_readback": "29 of 29 project pairs verified; 29 new Manual updates headers confirmed, zero fabricated entries; original owner registers unchanged. Source index V000003 PRE/POST verified.",
       "evidence_url": "https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit",
-      "result": "PR_QA_PENDING",
-      "limitations": "No live changes to project sources. Direct per-project ingestion and source permissions are not asserted; retain reviewed promotion and source evidence checks."
+      "result": "INITIAL_PR_QA_PASSED__FINAL_READBACK_QA_PENDING",
+      "limitations": "All 29 project-specific workbooks now have a same-ID, append-only Manual updates tab (gid 24061124, verified 29/29 headers; no new factual rows). Existing Project and Source links tabs were not edited. Use dated source notes, existing Record ID for correction/withdrawal, explicit Publish? Yes and owner request. This is a private intake, not a new fact authority. During the requested read pass, preserve evidence, check prior notice IDs and duplicates, and promote only reviewed eligible rows to the existing central notification/work registers. No automatic direct intake import. The master source index V000003 documents the protocol with PRE/POST history. All successful main deployments now have an HTTP readback job comparing the four deployed templates byte-for-byte and validating the seven-source public projection; existing release readback remains."
     }
   ]
 }

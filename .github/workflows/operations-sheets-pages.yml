@@ -224,6 +224,33 @@ jobs:
       - uses: actions/deploy-pages@v4
         id: deployment
 
+  verify-live-pages:
+    if: github.ref == 'refs/heads/main' && needs.deploy.result == 'success'
+    needs: deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify deployed homepage and reviewed projection
+        shell: bash
+        run: |
+          set -euo pipefail
+          pages="https://fabingurung.github.io/${GITHUB_REPOSITORY#*/}"
+          for file in index.html app.js styles.css sources.html; do
+            matched=false
+            for attempt in {1..12}; do
+              if curl -fsS --max-time 15 "$pages/$file?commit=$GITHUB_SHA&attempt=$attempt" -o /tmp/ops-live && cmp -s /tmp/ops-live "publication/operations/$file"; then
+                matched=true
+                break
+              fi
+              sleep 5
+            done
+            test "$matched" = true
+          done
+          curl -fsS --retry 5 --retry-all-errors --max-time 20 "$pages/operations.json?commit=$GITHUB_SHA" | python -c 'import json,sys; d=json.load(sys.stdin); assert d["provenance"]["live_workbook_count"]==7; assert d["provenance"]["source_authority"]=="GOOGLE_SHEETS"; p={x["id"] for x in d["projects"]}; assert "PRJ-000030" not in p; assert all(n["project_id"] in p for n in d["notices"]); print("LIVE_PAGES_READBACK_PASS",len(p),len(d["notices"]))'
+
   release-reviewed-closures-v3-2:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: deploy
