@@ -62,6 +62,7 @@ assert "OPS-PEND-000004" in pending
 # Immutable notebook creation-date enumeration and exact archival snapshots.
 import hashlib
 import re
+import subprocess
 ledger = json.loads(Path("ops/discord/notebook-versions.json").read_text(encoding="utf-8"))
 assert ledger["schema_version"] == "1.0.0"
 assert ledger["timezone"] == "Asia/Kathmandu"
@@ -81,8 +82,20 @@ for entry in revisions:
     assert re.fullmatch(r"\d{8}", date) and re.fullmatch(r"\d{3}", seq)
     assert date == entry["created_date_npt"].replace("-", "")
     artifact_path = Path(entry["archive_path"] or ledger["stable_working_path"])
-    assert artifact_path.is_file(), str(artifact_path)
-    content = artifact_path.read_bytes()
+    if artifact_path.is_file():
+        content = artifact_path.read_bytes()
+    else:
+        # Only explicitly registered historical snapshots may be outside the
+        # working tree. Verify their original bytes from the pinned Git commit.
+        assert entry["archive_path"], str(artifact_path)
+        storage = ledger.get("archive_storage", {})
+        assert storage.get("provider") == "GOOGLE_DRIVE_NATIVE_DOCS"
+        assert storage.get("original_git_baseline") == "8f3ed0be4256ea4ee852ebff4c95b8b3d8218e8c"
+        assert entry.get("archive_drive_doc_url", "").startswith("https://docs.google.com/document/d/")
+        assert artifact_path.as_posix().startswith(ledger["archive_base"] + "/")
+        content = subprocess.check_output(
+            ["git", "show", storage["original_git_baseline"] + ":" + artifact_path.as_posix()]
+        )
     git_blob = hashlib.sha1(b"blob " + str(len(content)).encode() + b"\x00" + content).hexdigest()
     assert git_blob == entry["git_blob_sha"], entry["revision"]
     if entry["archive_path"]:
