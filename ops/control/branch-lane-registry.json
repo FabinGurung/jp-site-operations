@@ -1141,6 +1141,52 @@
         "ops/99_VERSION_ARCHIVE/20261012/REQ05_DEVELOPER_SCOPE_PRE/CLOSURE/workspace/developer-software-backlog.v0.1.json.txt",
         "ops/99_VERSION_ARCHIVE/20261012/REQ05_DEVELOPER_SCOPE_PRE/assets/js/site-shell.js.txt"
       ]
+    },
+    {
+      "branch_id": "OPS-SYS-DRIVE-ARCHIVE-R19",
+      "branch_name": "docs/drive-archive-complete-20261124",
+      "status": "ACTIVE_FEATURE_LANE",
+      "allowed_for_work": true,
+      "requires_pull_request": true,
+      "merge_base": "main",
+      "direct_pages_deploy": false,
+      "purpose": "Complete owner-authorized Drive archival of the remaining 130 readback-verified explicit snapshots; update historical notebook pointers only; preserve active source and QA dependencies.",
+      "allowed_paths": [
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "docs/operations/ACTIVE_REPOSITORY_TREE.md",
+        "ops/discord/notebook-versions.json",
+        "ops/discord/README.md",
+        "ops/99_VERSION_ARCHIVE/**",
+        "ops/control/99_VERSION_ARCHIVE/**",
+        "ops/data/99_VERSION_ARCHIVE/**",
+        "ops/data/communication-web-daily/99_VERSION_ARCHIVE/**",
+        "ops/discord/99_VERSION_ARCHIVE/**",
+        "ops/evidence/sql/99_VERSION_ARCHIVE/**",
+        "resources/99_VERSION_ARCHIVE/**",
+        "scripts/99_VERSION_ARCHIVE/**",
+        "site-operations/99_VERSION_ARCHIVE/**",
+        "workspace/99_VERSION_ARCHIVE/**",
+        "scripts/validate_cwo_storage.py",
+        "controls/memory-wall.html",
+        "controls/storage.html"
+      ]
+    },
+    {
+      "branch_id": "OPS-SYS-ESTIMATION-HANDOVER-R20",
+      "branch_name": "feature/estimating-site-progress-handover-20261124",
+      "status": "ACTIVE_FEATURE_LANE",
+      "allowed_for_work": true,
+      "requires_pull_request": true,
+      "merge_base": "main",
+      "direct_pages_deploy": false,
+      "purpose": "Owner-authorized transfer of site intake and daily progress authority; register exact branch and source ownership; preserve source records.",
+      "allowed_paths": [
+        "docs/estimating-site-progress-handover-20261124.md",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py"
+      ]
     }
   ]
 }

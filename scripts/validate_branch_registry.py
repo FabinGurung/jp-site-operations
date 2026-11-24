@@ -103,7 +103,9 @@ system_bases={"system/notification-center": "feature/daily-ops-current-work", "s
               "docs/drive-rehome-20261121": "main",
               "pages/google-drive-source-gallery-20261123": "main",
               "pages/operations-source-links-audit-20261124": "main",
-              "docs/drive-archive-batch1-20261124": "main"}
+              "docs/drive-archive-batch1-20261124": "main",
+              "docs/drive-archive-complete-20261124": "main",
+              "feature/estimating-site-progress-handover-20261124": "main"}
 for lane in system_lanes:
     name=lane.get("branch_name","")
     if (name not in system_bases or lane.get("allowed_for_work") is not True
