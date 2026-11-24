@@ -73,6 +73,26 @@ async function markerColours(page) {
     assert.equal(kinds.filter(c=>c.includes("notice-quiet")).length,3);
     assert.equal(await mobile.locator("#attention-count").getAttribute("data-notice-sites"),"2");
     assert.equal(await mobile.locator(".site-scout svg").count(),1);
+    for (const viewport of [{width:390,height:844},{width:1280,height:800}]) {
+      await mobile.setViewportSize(viewport);
+      const track = await mobile.locator("#site-scout").evaluate(el=>{
+        const a=el.getAnimations()[0]; if(!a) throw Error("Missing patrol animation"); a.pause();
+        const out=[0,8000,14400,24000].map(t=>{a.currentTime=t;const b=el.getBoundingClientRect();return {x:b.x,y:b.y,r:b.right,b:b.bottom};});a.play();return out;
+      });
+      assert.ok(Math.max(...track.map(p=>p.x))-Math.min(...track.map(p=>p.x))>viewport.width*.5);
+      assert.ok(Math.max(...track.map(p=>p.y))-Math.min(...track.map(p=>p.y))>viewport.height*.5);
+      assert.ok(track.every(p=>p.x>=0&&p.y>=0&&p.r<=viewport.width+1&&p.b<=viewport.height+1));
+    }
+    await mobile.setViewportSize({width:390,height:844});
+    await mobile.locator("#scout-motion").click();
+    assert.equal(await mobile.locator("#scout-motion").getAttribute("aria-pressed"),"true");
+    assert.equal(await mobile.locator("#site-scout").evaluate(el=>getComputedStyle(el).animationPlayState),"paused");
+    assert.equal(await mobile.locator("#site-scout").evaluate(el=>getComputedStyle(el).pointerEvents),"none");
+    await mobile.locator("#scout-motion").click();
+    await mobile.emulateMedia({reducedMotion:"reduce"});
+    assert.equal(await mobile.locator("#site-scout").evaluate(el=>getComputedStyle(el).animationName),"none");
+    await mobile.emulateMedia({reducedMotion:"no-preference"});
+    check("Site Scout traverses both viewport axes on desktop and mobile, remains in bounds, cannot intercept taps, pauses and respects reduced motion");
     check("Default map highlights only the two sites with approved synthetic notifications; three quiet sites remain browseable; mascot present");
     const counts = await mobile.locator("[data-status-count]").allTextContents();
     assert.deepEqual(counts,["5","1","1","1","1","1"]);

@@ -393,6 +393,11 @@ byId("company-filter").addEventListener("change", () => {
 });
 byId("back-to-sites").addEventListener("click", () => clearSiteSelection(true,true));
 byId("clear-map-selection").addEventListener("click", () => clearSiteSelection(false,true));
+byId("scout-motion").addEventListener("click", () => {
+  const paused = byId("site-scout").classList.toggle("scout-paused");
+  byId("scout-motion").setAttribute("aria-pressed", String(paused));
+  byId("scout-motion").textContent = paused ? "Resume Scout" : "Pause Scout";
+});
 byId("directory-toggle").addEventListener("click", () => {
   const open = byId("navigation-panel").classList.toggle("directory-open");
   byId("directory-toggle").setAttribute("aria-expanded",String(open));

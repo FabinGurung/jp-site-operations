@@ -418,6 +418,31 @@
       "evidence_url": "https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit",
       "result": "INITIAL_PR_QA_PASSED__FINAL_READBACK_QA_PENDING",
       "limitations": "All 29 project-specific workbooks now have a same-ID, append-only Manual updates tab (gid 24061124, verified 29/29 headers; no new factual rows). Existing Project and Source links tabs were not edited. Use dated source notes, existing Record ID for correction/withdrawal, explicit Publish? Yes and owner request. This is a private intake, not a new fact authority. During the requested read pass, preserve evidence, check prior notice IDs and duplicates, and promote only reviewed eligible rows to the existing central notification/work registers. No automatic direct intake import. The master source index V000003 documents the protocol with PRE/POST history. All successful main deployments now have an HTTP readback job comparing the four deployed templates byte-for-byte and validating the seven-source public projection; existing release readback remains."
+    },
+    {
+      "id": "OPS-DEC-20261124-ROAMING-SCOUT",
+      "date_npt": "2026-11-24",
+      "decision": "Owner requested Site Scout travel across the homepage. Reuse existing inline SVG in a fixed, non-interactive overlay with a 32-second two-axis viewport patrol, responsive bounds, pause/resume and reduced-motion support. Preserve the notification counts, seven-source projection and owner-directed refresh. PR #56 main run 45396334807 successfully built and deployed; HTTP readback failed comparing raw HTML to gallery-injected HTML. Regenerate the exact approved gallery transformation in expected readback templates before byte comparison; log mismatching filename. No source data or permissions changed. Browser QA exercises coordinates, bounds, pause, and reduced motion. Merge/deployment pending.",
+      "fact_sources": [
+        "projects",
+        "notices"
+      ],
+      "code_owner": "GIT_OPERATIONS",
+      "artifacts": [
+        "publication/operations/index.html",
+        "publication/operations/styles.css",
+        "publication/operations/app.js",
+        "scripts/status_filter_browser_qa.cjs",
+        ".github/workflows/operations-sheets-pages.yml",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json"
+      ],
+      "source_readback": "Previous production build authenticated and deployed; no source fact changes requested.",
+      "evidence_url": "https://github.com/FabinGurung/jp-site-operations/actions/runs/45396334807",
+      "result": "PR_QA_PENDING",
+      "limitations": "Decorative mascot only; no inferred site urgency. Live readback must still pass."
     }
   ]
 }
