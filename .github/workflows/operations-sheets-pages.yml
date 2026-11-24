@@ -124,7 +124,11 @@ jobs:
   browser-status-qa:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
-    timeout-minutes: 16
+    timeout-minutes: 20
+    # Preinstalled, version-matched browser engines and OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     steps:
       - uses: actions/checkout@v4
         with:
@@ -136,7 +140,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1
-      - run: npx playwright install --with-deps chromium webkit
+      - name: Verify preinstalled Chromium and WebKit executables
+        run: node -e "const fs = require('node:fs'); const pw = require('playwright'); for (const engine of [pw.chromium,pw.webkit]) fs.accessSync(engine.executablePath(),fs.constants.X_OK)"
       - run: python scripts/build_status_filter_fixture.py _status_preview
       - name: Exercise mobile and desktop status source controls in Chromium
         shell: bash

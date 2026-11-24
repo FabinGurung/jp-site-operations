@@ -387,7 +387,7 @@
       "source_readback": "29 distinct source pairs verified by parent and MIME type; transferred original retains ID; progress/readiness headers inspected in Drive.",
       "evidence_url": "https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit",
       "result": "PR_QA_PENDING",
-      "limitations": "Header verification is not row reconciliation; private project docs are not direct publication inputs; authenticated run and deployment must pass."
+      "limitations": "Header verification is not row reconciliation; private project docs are not direct publication inputs; authenticated run and deployment must pass. Browser environment recovery: preinstalled version-matched Playwright container replaces timed-out dependency setup; same test and publication gates remain."
     }
   ]
 }
