@@ -238,16 +238,20 @@ jobs:
         run: |
           set -euo pipefail
           pages="https://fabingurung.github.io/${GITHUB_REPOSITORY#*/}"
+          mkdir -p /tmp/ops-expected
+          cp publication/operations/{index.html,app.js,styles.css,sources.html} /tmp/ops-expected/
+          python3 .github/source-gallery/install.py /tmp/ops-expected "${GITHUB_REPOSITORY#*/}"
           for file in index.html app.js styles.css sources.html; do
+            echo "Checking deployed $file against gallery-installed expected artifact"
             matched=false
             for attempt in {1..12}; do
-              if curl -fsS --max-time 15 "$pages/$file?commit=$GITHUB_SHA&attempt=$attempt" -o /tmp/ops-live && cmp -s /tmp/ops-live "publication/operations/$file"; then
+              if curl -fsS --max-time 15 "$pages/$file?commit=$GITHUB_SHA&attempt=$attempt" -o /tmp/ops-live && cmp -s /tmp/ops-live "/tmp/ops-expected/$file"; then
                 matched=true
                 break
               fi
               sleep 5
             done
-            test "$matched" = true
+            if [ "$matched" != true ]; then echo "::error::Live artifact mismatch: $file"; exit 1; fi
           done
           curl -fsS --retry 5 --retry-all-errors --max-time 20 "$pages/operations.json?commit=$GITHUB_SHA" | python -c 'import json,sys; d=json.load(sys.stdin); assert d["provenance"]["live_workbook_count"]==7; assert d["provenance"]["source_authority"]=="GOOGLE_SHEETS"; p={x["id"] for x in d["projects"]}; assert "PRJ-000030" not in p; assert all(n["project_id"] in p for n in d["notices"]); print("LIVE_PAGES_READBACK_PASS",len(p),len(d["notices"]))'
 
