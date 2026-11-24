@@ -1168,7 +1168,9 @@
         "scripts/99_VERSION_ARCHIVE/**",
         "site-operations/99_VERSION_ARCHIVE/**",
         "workspace/99_VERSION_ARCHIVE/**",
-        "scripts/validate_cwo_storage.py"
+        "scripts/validate_cwo_storage.py",
+        "controls/memory-wall.html",
+        "controls/storage.html"
       ]
     }
   ]
