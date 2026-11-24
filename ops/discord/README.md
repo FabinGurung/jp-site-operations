@@ -24,7 +24,7 @@ Existing A9 Discord archive and its Local/Main catalogues remain intact. This da
 
 ## Compulsory date-based notebook revisions (stable working link)
 
-The exact Colab URL above is **GitHub-backed**, not a Drive `/drive/<id>` notebook. Therefore, keep the GitHub working path above constant; there is no verified Google Drive file ID to copy/update. The source versions are enumerated by **Nepal creation date** in [`notebook-versions.json`](notebook-versions.json) and physically snapshotted under [`99_VERSION_ARCHIVE/`](99_VERSION_ARCHIVE/README.md).
+The exact Colab URL above is **GitHub-backed**, not a Drive `/drive/<id>` notebook. Therefore, keep the GitHub working path above constant; there is no verified Google Drive file ID to copy/update. The source versions are enumerated by **Nepal creation date** in [`notebook-versions.json`](notebook-versions.json) and historically snapshotted under [`99_VERSION_ARCHIVE/`](https://docs.google.com/document/d/1I0IFGUBptG57deBq4LAjUzNtLE2U_w1Iywt-qGSxYHE/edit).
 
 **Mandatory every-edit sequence:** read live main/feature refs; identify current `YYYYMMDD-NNN` revision and previous archive; PRE copy exact working notebook bytes to an immutable numbered archive if not already snapshotted; provider readback and compare Git blob; increment the day's ordinal for every notebook change (including a minor spelling/code/comment change); update only the stable original working path; update manifest and clear status (CURRENT vs ARCHIVED); run CI; promote to main on PASS; re-read source and archive. Do not rewrite archived blobs or alter GitHub Colab URL.
 
@@ -76,7 +76,7 @@ Revision **20261009-007** keeps the working Colab URL unchanged and adds **C04 S
 - **C01** authenticates Drive and the bot. **C02** now scans at least the last seven rolling days on **every** run, extending backwards if a verified high-water cursor predates that range. The scope is STILL exactly two parents and currently active children; archived threads and embed-only images remain uncovered.
 - **C05** verifies the *new* immutable C02 raw and candidate JSONL by SHA-256, then saves **pointer-only private JSONL indexes grouped by message creation date in Nepal time** and an immutable per-run JSON manifest. This is NOT an additional raw message archive, a public GitHub data dump, a daily construction-completion statement, or an automated Google Sheets projection. C05 does not advance cursors.
 - Public machine contracts: [day index schema](schemas/daily-message-index-v1.schema.json) and [index manifest schema](schemas/daily-run-index-manifest-v1.schema.json). Runtime test: [synthetic offline fixture](../../scripts/test_discord_daily_index_contract.py) with [CI evidence](https://github.com/FabinGurung/JP_Communication-Command-Centre-and-Resource-Hub/actions/runs/37922352759).
-- PRE snapshot of exactly the former v007 notebook: [007 archive](99_VERSION_ARCHIVE/20261009/007__A9_CWO_DISCORD_TWO_CHANNEL_DAILY_COLLECTOR__PRE_SEVEN_DAY_DAILY_INDEX.ipynb), Git blob `cb8a4228ab4e9c59ffbfab680aaaac37d4734e22`. Current source revision is `20261009-008` and has separate Git blob `6b954da36225d58f62207a3973418bf4d205b584`.
+- PRE snapshot of exactly the former v007 notebook: [007 archive](https://docs.google.com/document/d/1EcswH1J2Obitf8L1Nz-pJHCnRfOkRoc5t37gRy17Yyc/edit), Git blob `cb8a4228ab4e9c59ffbfab680aaaac37d4734e22`. Current source revision is `20261009-008` and has separate Git blob `6b954da36225d58f62207a3973418bf4d205b584`.
 - **Correction to the historical 007 release note above:** C04 did subsequently run. Live Drive has verified one private 8,830,415-byte provider derivative (file `1HBLKmpQV5yCD_90_v9iHEIbiTw3VduPw`) and its immutable sidecar receipt `1ftkzIKyqUhVvCCWYAw5ka_YfKlDg2tVi`. The old 749 mismatched *original* attachments remain unresolved; C04 did not certify them or move cursors. Last full C02 provider run remains `20261009T020256Z` PARTIAL.
 - Important efficiency debt: repeat capture may reattempt unresolved media on a PARTIAL source; design a separate governed failed-media recovery lane before claiming that unattended seven-day daily collection is resource-efficient. Do not discard the failure evidence or silently certify media.
 
@@ -87,7 +87,7 @@ Daily operator sequence: **C01 → C02 preview → type `COLLECT` → inspect so
 
 Preview-only creates **no frozen C02 receipt**, no new raw JSONL, no index, and no state advancement. It must NOT be followed by C05 using the previous handoff. C05 is only legitimate after a new confirmed C02 run. Previous 749 original-media size mismatches remain explicitly unresolved; the preview does not make them PASS and may still cause costly retries in affected sources.
 
-Immutable PRE: [notebook revision 008 snapshot](99_VERSION_ARCHIVE/20261009/008__A9_CWO_DISCORD_TWO_CHANNEL_DAILY_COLLECTOR__PRE_TRANSPARENT_SEVEN_DAY_PREFLIGHT.ipynb). Current source and ledger: [working notebook](A9_CWO_DISCORD_TWO_CHANNEL_DAILY_COLLECTOR_v1.0.ipynb) · [version registry](notebook-versions.json).
+Immutable PRE: [notebook revision 008 snapshot](https://docs.google.com/document/d/1lrBuFSzEfu8up6AyG9WDNi6SS3LijrRXhLlbxezp3oE/edit). Current source and ledger: [working notebook](A9_CWO_DISCORD_TWO_CHANNEL_DAILY_COLLECTOR_v1.0.ipynb) · [version registry](notebook-versions.json).
 
 
 ### Revision `20261009-010` — no stale receipt indexing
@@ -101,3 +101,8 @@ A C02 preview-only attempt invalidates any earlier C02 confirmation in the same 
 
 
 **Integrity hardening r013 (9 October 2026):** A pre-existing Drive attachment is never labelled ORIGINAL_REUSED based on file-size equality alone. The authorized Discord source must be re-fetched and its declared size plus SHA-256 matched to a complete private Drive readback. Any mismatch remains unresolved media debt and blocks the publication gate. The exact r012 PRE notebook is archived at `99_VERSION_ARCHIVE/20261009/012__A9_CWO_DISCORD_TWO_CHANNEL_DAILY_COLLECTOR__PRE_ORIGINAL_REUSE_SHA_GUARD.ipynb`. No real authenticated C06-C09 execution is claimed.
+
+
+### 24 November 2026 — history rehomed to Google Drive
+
+The historical notebook snapshots formerly under 99_VERSION_ARCHIVE are now preserved by original path and blob hash in the [Operations archive index](https://docs.google.com/document/d/1lgQRLux4dmNdvD0iaCiGTrU2gZOO1xzl9jBUucrPgfI/edit). The [version ledger](notebook-versions.json) retains the historical paths and links to their respective Drive packets. The current notebook, its Colab URL and its run/approval gates are unchanged. Restore using the original pinned Git blob or verified Drive packet; do not load archive snapshots in routine work.

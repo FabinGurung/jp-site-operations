@@ -23,15 +23,6 @@ The master semantic Doc registers the seven per-role semantic Docs. Actions veri
 | organizations | [Companies and Organizations](https://docs.google.com/spreadsheets/d/1cwubE_4nB2SAEdLu6ry80G0HeNjbBdu4X3DA6jrcQ1E/edit) | organizations |
 | directory | [Website Publishing and Source Directory](https://docs.google.com/spreadsheets/d/17y3ki0SLSG_Hmz8AipfWhhffnKastcjHvRqIdepJMu4/edit) | 00_SOURCE_DIRECTORY |
 
-## Archive batch 1
+## Historical archive — verified 24 November 2026
 
-61 explicit historical files were copied into six readable native Google Docs; their full text, original paths and blob SHA/byte counts are preserved and readback matched. These are proposed for removal from the working tree, subject to PR validation and merge. Original Git baseline: `8f3ed0be4256ea4ee852ebff4c95b8b3d8218e8c`. No active workflow, current data, canonical source Sheet, or frozen branch is removed. Other archive files remain excluded from routine reading until backed up and validated.
-
-- [Archived workflow versions](https://docs.google.com/document/d/1DQZEYMK5XST6ueSq2x6KoISIF8A6Za5qL2xoWKoPtfo/edit) — 3 original files
-- [Archive packet 01](https://docs.google.com/document/d/1Fnky_7jnsKc1LczcXT9oCNKy7F36lDwhznRJx6-hKiI/edit) — 12 original files
-- [Archive packet 02](https://docs.google.com/document/d/1vKbvw8XmvsQFswsw9e3xhoIa0FwhleHmwM3BLh-iDdA/edit) — 12 original files
-- [Archive packet 03](https://docs.google.com/document/d/15bqUPmzQCoI5qYy0njv_D7dw0OnsWwb1rs9Fipf9P6o/edit) — 12 original files
-- [Archive packet 04](https://docs.google.com/document/d/1mDMp523O4AxZCbc93AptryiXfplBgwhg6rgJzGLExRw/edit) — 10 original files
-- [Archive packet 05](https://docs.google.com/document/d/1LM-lMjz2scLWPUlH6C0ssJSH6frdj51I_iN873LAbn4/edit) — 12 original files
-
-Google Docs rate limit interrupted the next packet; no unverified copy qualifies for removal. No ZIP files created. For restoration, recover exact source from the original commit or the named packet.
+[Archive index](https://docs.google.com/document/d/1lgQRLux4dmNdvD0iaCiGTrU2gZOO1xzl9jBUucrPgfI/edit) — **191 original historical files**, 25 native Google Docs, 3,632,280 original bytes. Original paths, blob SHAs, byte counts and exact text are preserved. [Drive folder](https://drive.google.com/drive/folders/1ZSjf4fC2P3UXpTpog_fDEb_GqYz3H9be). Original pinned Git baseline: `8f3ed0be4256ea4ee852ebff4c95b8b3d8218e8c`. PR #53 removed 61 archived copies; R19 removes the remaining 130 verified copies. Do not read the archive index or any archive packet during ordinary AI work. Open a packet only for explicit restoration/history. No ZIPs, no changes to the original source Sheet/Doc records or permissions, no deletion of Git history, frozen branch refs or active compatibility/QA dependencies. The production task tree above remains the routine read scope.
