@@ -388,6 +388,36 @@
       "evidence_url": "https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit",
       "result": "PR_QA_PENDING",
       "limitations": "Header verification is not row reconciliation; private project docs are not direct publication inputs; authenticated run and deployment must pass. Browser environment recovery: preinstalled version-matched Playwright container replaces timed-out dependency setup; same test and publication gates remain."
+    },
+    {
+      "id": "OPS-DEC-20261124-OWNER-NOTIFICATION-FOCUS",
+      "date_npt": "2026-11-24",
+      "decision": "Owner-directed notification mode: no scheduled polling; map defaults to reviewed notices, quiet project pins remain browseable. Site Scout is decorative, not a source status indicator. Current manually reviewed notices remain; no fabricated new notices or changes to original source records. ChatGPT reads the selected project Doc and linked Sheet on owner request, reconciles stable IDs and publication approval, then promotes approved source changes; Actions publishes on intentional code merges or manual workflow dispatch. Direct project workbook ingestion is not implemented; central owner Sheets and original reviewed Doc evidence still govern. Private source notes are never published wholesale.",
+      "fact_sources": [
+        "projects",
+        "notices",
+        "messages",
+        "choices"
+      ],
+      "code_owner": "GIT_OPERATIONS",
+      "artifacts": [
+        "publication/operations/app.js",
+        "publication/operations/index.html",
+        "publication/operations/styles.css",
+        "publication/operations/sources.html",
+        "scripts/status_filter_browser_qa.cjs",
+        ".github/workflows/operations-sheets-pages.yml",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json",
+        "docs/operations/ACTIVE_REPOSITORY_TREE.md",
+        "AGENTS.md"
+      ],
+      "source_readback": "Drive source index and 29 native Sheet / Doc pairs verified; reviewed notice projection enforces Reviewed and Publish TRUE.",
+      "evidence_url": "https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit",
+      "result": "PR_QA_PENDING",
+      "limitations": "No live changes to project sources. Direct per-project ingestion and source permissions are not asserted; retain reviewed promotion and source evidence checks."
     }
   ]
 }

@@ -85,8 +85,7 @@ on:
       - 'scripts/verify_site_capture_source.py'
       - 'scripts/test_ops_capture_source.py'
       - '.github/workflows/operations-sheets-pages.yml'
-  schedule:
-    - cron: '19 * * * *'
+  # Owner-directed refresh only: no periodic automatic data publication.
   workflow_dispatch:
     inputs:
       publish:
@@ -122,7 +121,6 @@ jobs:
       - run: python scripts/validate_ops_source_memory.py
 
   browser-status-qa:
-    if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     # Preinstalled, version-matched browser engines and OS dependencies.
@@ -163,7 +161,7 @@ jobs:
       github.event_name != 'pull_request' &&
       needs.test.result == 'success' &&
       (github.event_name == 'workflow_dispatch' || vars.JP_OPERATIONS_PAGES_MODE == 'SHEETS_V2') &&
-      (github.event_name == 'schedule' || needs['browser-status-qa'].result == 'success')
+      needs['browser-status-qa'].result == 'success'
     needs: [test, browser-status-qa]
     runs-on: ubuntu-24.04
     timeout-minutes: 10

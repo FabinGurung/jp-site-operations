@@ -24,7 +24,7 @@ const safeList = (target, elements, empty) => {
 let dataset = null;
 let map = null;
 let markerLayer = null;
-let mapMode = "projects";
+let mapMode = "activities";
 let statusFilter = "all";
 let noticeCategory = "all";
 let activeSiteId = "";
@@ -71,7 +71,7 @@ const mapReading = p => {
   if (mapMode === "work") return {badge: r.work.length ? String(r.work.length) : "–",
     note: r.work.length + " published work reports · remaining work unknown", kind: "report"};
   if (mapMode === "activities") return {badge: r.notices.length ? String(r.notices.length) : "–",
-    note: r.notices.length + " reviewed instructions · unresolved status unknown", kind: "review"};
+    note: r.notices.length ? r.notices.length + " reviewed notifications · resolution not confirmed" : "No reviewed notifications", kind: r.notices.length ? "review notice-highlight" : "location notice-quiet"};
   if (mapMode === "resources") return {badge:"?", note:"Material/equipment demand not connected", kind:"unknown"};
   if (mapMode === "manpower") return {badge:"?", note:"Crew-demand source not connected", kind:"unknown"};
   return {badge:"•", note:p.status || "Published project listing · no public status", kind:"location"};
@@ -173,6 +173,7 @@ function drawMap(projects) {
     badge.style.setProperty("--company-colour", companyColour(p));
     const company = p.company || "Organization not public";
     const marker = L.marker([p.lat, p.lng], {
+      zIndexOffset: info.kind.includes("notice-highlight") ? 500 : 0,
       title: p.name + " — " + company + " — " + info.note,
       alt: p.name + " — " + company + " — " + info.note,
       icon: L.divIcon({html: badge.outerHTML, className: "site-map-pin", iconSize: [48, 48], iconAnchor:[24, 46]})
@@ -322,6 +323,9 @@ function render() {
           ? "Crew-demand register not connected · private attendance and payroll remain outside this map"
           : projects.filter(hasPin).length + " approved locations · " + reviewedSites + " sites have public work reports";
   byId("field-pulse").textContent = pulse;
+  const active = dataset.notices.filter(filterByProject);
+  byId("attention-count").textContent = new Set(active.map(n => n.project_id)).size + " sites · " + active.length + " reviewed notifications";
+  byId("attention-count").setAttribute("data-notice-sites", String(new Set(active.map(n => n.project_id)).size));
   byId("map-mode-description").textContent = modeNotes[mapMode];
 }
 
