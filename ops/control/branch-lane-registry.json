@@ -1046,6 +1046,23 @@
         "scripts/docs_semantic_read.py",
         "scripts/test_ops_semantic_docs.py"
       ]
+    },
+    {
+      "branch_id": "OPS-SYS-SOURCE-LINK-AUDIT-R17",
+      "branch_name": "pages/operations-source-links-audit-20261124",
+      "status": "ACTIVE_FEATURE_LANE",
+      "allowed_for_work": true,
+      "requires_pull_request": true,
+      "merge_base": "main",
+      "direct_pages_deploy": false,
+      "purpose": "24 November Operations owner-scoped audit: exact source links, gallery workflow triggers, verified checkpoint.",
+      "allowed_paths": [
+        ".github/source-gallery/source-gallery.js",
+        ".github/workflows/operations-sheets-pages.yml",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md"
+      ]
     }
   ]
 }
