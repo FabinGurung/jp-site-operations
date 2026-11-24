@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "title": "A9 Operations \u2014 source ownership and decision memory ledger",
+  "title": "A9 Operations — source ownership and decision memory ledger",
   "authority": "ROUTING_AND_RELEASE_EVIDENCE_ONLY__NOT_A_DOMAIN_FACT_DATABASE",
   "verified_readback_date_npt": "2026-11-12",
   "source_directory": {
@@ -70,7 +70,7 @@
     "organizations": {
       "id": "1cwubE_4nB2SAEdLu6ry80G0HeNjbBdu4X3DA6jrcQ1E",
       "tab": "organizations",
-      "owner": "Companies and Organizations \u2014 v1.2",
+      "owner": "Companies and Organizations — v1.2",
       "fields": [
         "organization_id",
         "organization_name",
@@ -83,7 +83,7 @@
     "directory": {
       "id": "17y3ki0SLSG_Hmz8AipfWhhffnKastcjHvRqIdepJMu4",
       "tab": "00_SOURCE_DIRECTORY",
-      "owner": "Website Publishing and Source Directory \u2014 LIVE",
+      "owner": "Website Publishing and Source Directory — LIVE",
       "fields": [
         "subject",
         "google_sheet",
@@ -361,6 +361,33 @@
       "evidence_url": null,
       "result": "PR_QA_PENDING",
       "limitations": "Palette is presentation code, not a source fact. Windows auto-start and phone Home Screen shortcut require local device setup. Current site loads a published snapshot on open/refresh; Doc note edits require reviewed source Sheet admission and successful Actions publication."
+    },
+    {
+      "id": "OPS-DEC-20261124-PROJECT-SOURCE-ROUTING",
+      "date_npt": "2026-11-24",
+      "decision": "Normalize company/project working source navigation; verify transferred Fishtail capture keys without reading private rows in Actions. Keep approved publishing contract.",
+      "fact_sources": [
+        "projects",
+        "organizations",
+        "progress",
+        "notices"
+      ],
+      "code_owner": "GIT_OPERATIONS",
+      "artifacts": [
+        "docs/estimating-site-progress-handover-20261124.md",
+        "docs/operations/ACTIVE_REPOSITORY_TREE.md",
+        "A7_MODULE.json",
+        "publication/operations/sources.html",
+        ".github/workflows/operations-sheets-pages.yml",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json",
+        "scripts/verify_site_capture_source.py",
+        "scripts/test_ops_capture_source.py"
+      ],
+      "source_readback": "29 distinct source pairs verified by parent and MIME type; transferred original retains ID; progress/readiness headers inspected in Drive.",
+      "evidence_url": "https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit",
+      "result": "PR_QA_PENDING",
+      "limitations": "Header verification is not row reconciliation; private project docs are not direct publication inputs; authenticated run and deployment must pass. Browser environment recovery: preinstalled version-matched Playwright container replaces timed-out dependency setup; same test and publication gates remain."
     }
   ]
 }

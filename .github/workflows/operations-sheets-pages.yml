@@ -38,6 +38,8 @@ on:
       - 'scripts/notification_projection.py'
       - 'scripts/sheets_read.py'
       - 'scripts/test_ops_publication.py'
+      - 'scripts/verify_site_capture_source.py'
+      - 'scripts/test_ops_capture_source.py'
       - '.github/workflows/operations-sheets-pages.yml'
   push:
     branches:
@@ -80,6 +82,8 @@ on:
       - 'scripts/notification_projection.py'
       - 'scripts/sheets_read.py'
       - 'scripts/test_ops_publication.py'
+      - 'scripts/verify_site_capture_source.py'
+      - 'scripts/test_ops_capture_source.py'
       - '.github/workflows/operations-sheets-pages.yml'
   schedule:
     - cron: '19 * * * *'
@@ -114,12 +118,17 @@ jobs:
       - run: node --check scripts/status_filter_browser_qa.cjs
       - run: python -m unittest discover -s scripts -p 'test_ops_publication.py' -v
       - run: python -m unittest discover -s scripts -p 'test_ops_semantic_docs.py' -v
+      - run: python -m unittest discover -s scripts -p 'test_ops_capture_source.py' -v
       - run: python scripts/validate_ops_source_memory.py
 
   browser-status-qa:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
-    timeout-minutes: 16
+    timeout-minutes: 20
+    # Preinstalled, version-matched browser engines and OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     steps:
       - uses: actions/checkout@v4
         with:
@@ -131,7 +140,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1
-      - run: npx playwright install --with-deps chromium webkit
+      - name: Verify preinstalled Chromium and WebKit executables
+        run: node -e "const fs = require('node:fs'); const pw = require('playwright'); for (const engine of [pw.chromium,pw.webkit]) fs.accessSync(engine.executablePath(),fs.constants.X_OK)"
       - run: python scripts/build_status_filter_fixture.py _status_preview
       - name: Exercise mobile and desktop status source controls in Chromium
         shell: bash
@@ -185,6 +195,10 @@ jobs:
             https://www.googleapis.com/auth/drive.readonly
           create_credentials_file: false
           export_environment_variables: false
+      - name: Verify transferred Fishtail capture headers (read only)
+        env:
+          GOOGLE_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+        run: python scripts/verify_site_capture_source.py
       - name: Verify semantic Google Docs and original Sheets; build public Pages files
         env:
           GOOGLE_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}

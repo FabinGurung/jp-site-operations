@@ -91,6 +91,12 @@
       "kind": "HUMAN_INTERFACE",
       "ref": "main",
       "path": "workspace/"
+    },
+    {
+      "entrypoint_id": "PROJECT_SOURCE_ROUTER",
+      "kind": "HUMAN_READ_FIRST",
+      "ref": "main",
+      "path": "docs/operations/ACTIVE_REPOSITORY_TREE.md"
     }
   ],
   "resolver_rules": [
