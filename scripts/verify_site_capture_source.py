@@ -20,7 +20,8 @@ def verify_headers(headers):
 
 def main():
     token = os.environ["GOOGLE_ACCESS_TOKEN"]
-    query = urlencode([("ranges", f"'{tab}'!A1:AZ1") for tab in REQUIRED])
+    ends = {"2_OPS_DAILY_PROGRESS": "H1", "3_OPS_DAILY_READINESS": "W1"}
+    query = urlencode([("ranges", f"'{tab}'!A1:{ends[tab]}") for tab in REQUIRED])
     url = f"https://sheets.googleapis.com/v4/spreadsheets/{BOOK}/values:batchGet?{query}"
     with urlopen(Request(url, headers={"Authorization": f"Bearer {token}"}), timeout=30) as response:
         result = json.load(response)["valueRanges"]
