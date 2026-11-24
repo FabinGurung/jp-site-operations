@@ -388,6 +388,36 @@
       "evidence_url": "https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit",
       "result": "PR_QA_PENDING",
       "limitations": "Header verification is not row reconciliation; private project docs are not direct publication inputs; authenticated run and deployment must pass. Browser environment recovery: preinstalled version-matched Playwright container replaces timed-out dependency setup; same test and publication gates remain."
+    },
+    {
+      "id": "OPS-DEC-20261124-OWNER-NOTIFICATION-FOCUS",
+      "date_npt": "2026-11-24",
+      "decision": "Owner-directed notification mode: no scheduled polling; map defaults to reviewed notices, quiet project pins remain browseable. Site Scout is decorative, not a source status indicator. Current manually reviewed notices remain; no fabricated new notices or changes to original source records. ChatGPT reads the selected project Doc and linked Sheet on owner request, reconciles stable IDs and publication approval, then promotes approved source changes; Actions publishes on intentional code merges or manual workflow dispatch. Direct project workbook ingestion is not implemented; central owner Sheets and original reviewed Doc evidence still govern. Private source notes are never published wholesale.",
+      "fact_sources": [
+        "projects",
+        "notices",
+        "messages",
+        "choices"
+      ],
+      "code_owner": "GIT_OPERATIONS",
+      "artifacts": [
+        "publication/operations/app.js",
+        "publication/operations/index.html",
+        "publication/operations/styles.css",
+        "publication/operations/sources.html",
+        "scripts/status_filter_browser_qa.cjs",
+        ".github/workflows/operations-sheets-pages.yml",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json",
+        "docs/operations/ACTIVE_REPOSITORY_TREE.md",
+        "AGENTS.md"
+      ],
+      "source_readback": "29 of 29 project pairs verified; 29 new Manual updates headers confirmed, zero fabricated entries; original owner registers unchanged. Source index V000003 PRE/POST verified.",
+      "evidence_url": "https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit",
+      "result": "INITIAL_PR_QA_PASSED__FINAL_READBACK_QA_PENDING",
+      "limitations": "All 29 project-specific workbooks now have a same-ID, append-only Manual updates tab (gid 24061124, verified 29/29 headers; no new factual rows). Existing Project and Source links tabs were not edited. Use dated source notes, existing Record ID for correction/withdrawal, explicit Publish? Yes and owner request. This is a private intake, not a new fact authority. During the requested read pass, preserve evidence, check prior notice IDs and duplicates, and promote only reviewed eligible rows to the existing central notification/work registers. No automatic direct intake import. The master source index V000003 documents the protocol with PRE/POST history. All successful main deployments now have an HTTP readback job comparing the four deployed templates byte-for-byte and validating the seven-source public projection; existing release readback remains."
     }
   ]
 }

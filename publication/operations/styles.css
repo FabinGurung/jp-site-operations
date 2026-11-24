@@ -386,3 +386,8 @@ body{min-width:0;max-width:100%;overflow-x:clip}
  .closure-counts strong{font-size:21px}
  .closure-counts span{font-size:10px}
 }
+
+/* Owner-reviewed notification mode: keep quiet sites navigable, not attention markers. */
+.site-map-badge.notice-quiet{background:#fff;color:#526563;border:2px solid var(--company-colour,#667775);box-shadow:none;transform:none;width:23px;height:23px;margin:9px;font-size:12px;border-radius:50%}
+.site-map-badge.notice-highlight{outline:3px solid #e2a326;outline-offset:2px;box-shadow:0 4px 12px #9a65004d;transform:none}
+.attention-strip{display:flex;align-items:center;gap:12px;padding:10px 12px;margin:8px 0 12px;border:1px solid #cadfd2;border-radius:12px;background:#f2faf5;min-width:0;overflow:hidden}.attention-strip p{margin:2px 0 0;font-size:.85rem}.attention-strip a{margin-left:auto;flex-shrink:0}.site-scout{flex:0 0 48px;animation:site-scout-bob 3.2s ease-in-out infinite}.site-scout svg{display:block}@keyframes site-scout-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}@media(prefers-reduced-motion:reduce){.site-scout{animation:none}}@media(max-width:400px){.attention-strip{flex-wrap:wrap}.attention-strip a{margin-left:60px}}

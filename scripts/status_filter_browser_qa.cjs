@@ -67,6 +67,13 @@ async function markerColours(page) {
     assert.equal(await mobile.locator("[data-project-status]").count(),6);
     assert.deepEqual((await statusInfo(mobile)).active,["all"]);
     assert.equal((await statusInfo(mobile)).pins,5);
+    assert.equal(await mobile.locator('[data-map-mode="activities"]').getAttribute("aria-pressed"),"true");
+    const kinds = await mobile.evaluate(()=>window.__qaMarkers.map(m=>{const e=document.createElement("div");e.innerHTML=m.icon;return e.firstElementChild.className;}));
+    assert.equal(kinds.filter(c=>c.includes("notice-highlight")).length,2);
+    assert.equal(kinds.filter(c=>c.includes("notice-quiet")).length,3);
+    assert.equal(await mobile.locator("#attention-count").getAttribute("data-notice-sites"),"2");
+    assert.equal(await mobile.locator(".site-scout svg").count(),1);
+    check("Default map highlights only the two sites with approved synthetic notifications; three quiet sites remain browseable; mascot present");
     const counts = await mobile.locator("[data-status-count]").allTextContents();
     assert.deepEqual(counts,["5","1","1","1","1","1"]);
     check("390px phone shows six accessible source-counted buttons, five approved pins and hidden desktop select");

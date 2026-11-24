@@ -48,11 +48,11 @@
 <main id="main" class="centre">
   <span id="receipt" class="visually-hidden" role="status">Loading publication readback…</span>
   <section id="map" class="surface map-section" aria-labelledby="map-title">
-    <div class="section-head"><div><span class="eyebrow">MAP · ACTIVE PROJECTS</span><h2 id="map-title">Project map</h2></div><p>Select a site to view its recorded notifications.</p></div>
+    <div class="section-head"><div><span class="eyebrow">MAP · REVIEWED NOTIFICATIONS</span><h2 id="map-title">Project map</h2></div><p>Only sites with reviewed notifications are emphasized. Other sites remain available.</p></div>
     <details class="advanced-map-settings"><summary>Map data layers</summary><div class="map-modes" role="group" aria-label="Choose site information layer">
-      <button type="button" data-map-mode="projects" aria-pressed="true">Sites</button>
+      <button type="button" data-map-mode="projects" aria-pressed="false">Sites</button>
       <button type="button" data-map-mode="work" aria-pressed="false">Work</button>
-      <button type="button" data-map-mode="activities" aria-pressed="false">Notifications</button>
+      <button type="button" data-map-mode="activities" aria-pressed="true">Notifications</button>
     </div></details>
     <div class="mobile-status-filter" aria-label="Filter sites by recorded project status">
       <div class="mobile-filter-heading"><strong>Show sites by status</strong><span>From Projects and Locations Sheet</span></div>
@@ -70,9 +70,10 @@
     <div id="field-pulse" class="field-pulse" role="status" aria-live="polite" hidden>Loading reviewed site records…</div>
     <div class="map-field-actions"><span id="map-selection-hint" role="status">Tap a pin to open that site's notifications</span><button id="clear-map-selection" type="button" hidden>All sites</button></div>
     <div class="company-legend" aria-label="Map colours by executing organization">
-      <p>Pin colour identifies the executing organization. Numbers follow the selected map layer.</p>
+      <p>In Notifications mode, quiet pins have no reviewed notices; numbered pins show reviewed notifications. Colours identify the executing organization.</p>
       <ul id="company-legend" aria-live="polite"></ul>
     </div>
+    <div class="attention-strip"><div class="site-scout" aria-hidden="true"><svg viewBox="0 0 72 72" width="48" height="48"><rect x="12" y="28" width="48" height="32" rx="13" fill="#eaf5ed" stroke="#1a624c" stroke-width="3"/><path d="M16 29V24a20 20 0 0 1 40 0v5M11 29h50" fill="#f6c84e" stroke="#784d16" stroke-width="3" stroke-linejoin="round"/><path d="M36 8v13" stroke="#784d16" stroke-width="3"/><circle cx="26" cy="41" r="3" fill="#173c34"/><circle cx="46" cy="41" r="3" fill="#173c34"/><path d="M29 49q7 5 14 0" fill="none" stroke="#173c34" stroke-width="2.5" stroke-linecap="round"/><rect x="45" y="50" width="21" height="18" rx="3" fill="#fff" stroke="#246b9a" stroke-width="2"/><path d="m49 57 3 3 6-7" fill="none" stroke="#1a624c" stroke-width="2" stroke-linecap="round"/></svg></div><div><strong>Site Scout</strong><p id="attention-count" role="status">Reading reviewed notifications…</p></div><a class="quiet-link" href="./sources.html">Edit sources</a></div>
     <div id="map-canvas" role="region" aria-label="Interactive project location map" tabindex="0"></div>
     <p id="map-fallback" class="help" hidden>Map tiles are not available. Use the project navigator to browse all approved listings.</p>
 
