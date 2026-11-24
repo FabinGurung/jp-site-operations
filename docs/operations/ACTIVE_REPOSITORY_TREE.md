@@ -35,3 +35,9 @@ The master semantic Doc registers the seven per-role semantic Docs. Actions veri
 - [Archive packet 05](https://docs.google.com/document/d/1LM-lMjz2scLWPUlH6C0ssJSH6frdj51I_iN873LAbn4/edit) — 12 original files
 
 Google Docs rate limit interrupted the next packet; no unverified copy qualifies for removal. No ZIP files created. For restoration, recover exact source from the original commit or the named packet.
+
+## Project sources and admission (24 November 2026)
+
+[Company/project source index](https://docs.google.com/document/d/1mv-2L79uEmEIo9Xhkj3F5QDJKa6ZyFGljQ2-kF0lAJo/edit) contains 29 project-specific native Sheet/Doc pairs in [Fishtail](https://drive.google.com/drive/folders/1yyKNj1dbESxCxXSP_oqxmzzWfYIHYc40) (27) and [Rohini](https://drive.google.com/drive/folders/1HrbCyRN4gO-PwYLhDLw38fqaGenl0zvv) (2). PRJ-000030 is a retired alias and is excluded. The project workbooks are routing views, not duplicate source facts; signed-in AI reads the relevant project Doc and original register by project ID. Existing Sharada notifications Doc was moved without changing identity or content. New notes are not evidence of performed work.
+
+Fishtail's original transferred workbook owns manual daily progress and readiness. Its `2_OPS_DAILY_PROGRESS` and `3_OPS_DAILY_READINESS` headers expose project_id (FK); progress also uses progress_event_id (PK). The control hub and intake are separate: intake is non-authoritative, hub admission is reviewed. Header-only readback in Actions verifies the transferred source without importing private rows. Public Maps, Progress and Notifications still consume their existing seven approved workbooks and reviewed Doc evidence; private source changes require reviewed promotion to the corresponding owner. No new automated raw-note publication, access grants or changes to the original workbook. Estimation retains financial, attendance, BBS and measurement ownership.

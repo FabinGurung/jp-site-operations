@@ -1185,7 +1185,15 @@
       "allowed_paths": [
         "docs/estimating-site-progress-handover-20261124.md",
         "ops/control/branch-lane-registry.json",
-        "scripts/validate_branch_registry.py"
+        "scripts/validate_branch_registry.py",
+        "docs/operations/ACTIVE_REPOSITORY_TREE.md",
+        "A7_MODULE.json",
+        "publication/operations/sources.html",
+        ".github/workflows/operations-sheets-pages.yml",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json",
+        "scripts/verify_site_capture_source.py",
+        "scripts/test_ops_capture_source.py"
       ]
     }
   ]
