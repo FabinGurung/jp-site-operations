@@ -205,6 +205,7 @@ async function markerColours(page) {
     await mobile.locator("#reset-filters").click();
     await mobile.locator("#resource-view").click();
     assert.equal(await mobile.locator("#resource-desk").isVisible(),true);
+    assert.equal(await mobile.locator("#map-title").textContent(),"Materials & Labour");
     assert.equal(await mobile.locator("#map-canvas").isVisible(),false);
     assert.equal(await mobile.locator("#notifications").isVisible(),false);
     assert.equal(await mobile.locator(".resource-table tbody tr").count(),1);

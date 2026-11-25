@@ -248,6 +248,7 @@ function renderResourceDesk(projects) {
 }
 function setView(mode){
   viewMode=mode;
+  byId("map-title").textContent=mode==="resources"?"Materials & Labour":"Project map";
   byId("geo-view").setAttribute("aria-pressed",String(mode==="map"));
   byId("resource-view").setAttribute("aria-pressed",String(mode==="resources"));
   byId("map-canvas").hidden=mode==="resources";
