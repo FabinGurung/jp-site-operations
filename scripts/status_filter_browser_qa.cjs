@@ -212,9 +212,9 @@ async function markerColours(page) {
     assert.ok((await mobile.locator(".resource-table").textContent()).includes("Synthetic materials instruction"));
     assert.ok((await mobile.locator(".resource-table").textContent()).includes("12 · bags"));
     assert.ok(!(await mobile.locator(".resource-table").textContent()).includes("Synthetic site-supervision note"));
-    assert.equal(await mobile.locator(".resource-row-details").getAttribute("open"),null);
-    await mobile.locator(".resource-row-details summary").click();
-    assert.equal(await mobile.locator(".resource-row-details p").first().isVisible(),true);
+    assert.equal(await mobile.locator("#resource-desk .resource-row-details").getAttribute("open"),null);
+    await mobile.locator("#resource-desk .resource-row-details summary").click();
+    assert.equal(await mobile.locator("#resource-desk .resource-row-details p").first().isVisible(),true);
     await mobile.locator("#resource-site").selectOption("PRJ-999901");
     assert.equal(await mobile.locator(".resource-table").count(),0);
     await mobile.locator("#resource-site").selectOption("");
