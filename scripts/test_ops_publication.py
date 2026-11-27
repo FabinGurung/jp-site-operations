@@ -131,7 +131,8 @@ class OperationsPublicationTest(unittest.TestCase):
             self.assertEqual(data["identity"]["public_project_count"], 1)
             self.assertTrue(data["identity"]["nonpublic_or_retired_rows_excluded"])
             library = "https://fabingurung.github.io/jp-field-desk-library/"
-            for path in ("index.html", "owner-help.html", "resources/index.html"):
+            self.assertNotIn(f'href="{library}"', (out / "index.html").read_text())
+            for path in ("owner-help.html", "resources/index.html"):
                 with self.subTest(path=path):
                     html = (out / path).read_text()
                     self.assertIn(f'href="{library}"', html)
