@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "kind": "DERIVED_PUBLIC_SITE_INTERPRETATION",
   "source_authority": "SAME_SEVEN_ORIGINAL_GOOGLE_SHEETS",
-  "readback_at_npt": "2026-11-27T10:45+05:45",
+  "readback_at_npt": "2026-11-27T10:47+05:45",
   "summary": {
     "public_site_count": 29,
     "reviewed_notice_count": 5,
