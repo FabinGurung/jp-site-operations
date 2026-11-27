@@ -28,6 +28,7 @@ let mapMode = "activities";
 let statusFilter = "all";
 let noticeCategory = "Work";
 let viewMode = "map";
+let resourceTab = "materials";
 const mobileField = () => matchMedia("(max-width:900px)").matches;
 const fieldCategories = ["Work","Materials"];
 const fieldNotice = n => fieldCategories.includes(n.category);
@@ -155,7 +156,7 @@ function clearSiteSelection(goToMap = true, allSites = false) {
 
 function drawMap(projects) {
   renderCompanyLegend(projects);
-  if(viewMode==="graph") return;
+  if(viewMode==="resources") return;
   if (!window.L) {
     byId("map-fallback").hidden = false;
     return;
@@ -204,27 +205,57 @@ function drawMap(projects) {
   map.invalidateSize();
 }
 
-function renderPlanningGraph(projects) {
-  const nodes=projects.map(p=>({p,counts:fieldCategories.map(category=>({category,count:dataset.notices.filter(n=>n.project_id===p.id&&n.category===category).length}))})).filter(x=>x.counts.some(c=>c.count));
-  const graph=nodes.map(({p,counts})=>{
-    const group=make("article","","graph-cluster");
-    const hub=make("button",p.name,"graph-hub");hub.type="button";hub.addEventListener("click",()=>chooseProject(p.id,false,true));
-    const branches=make("div","","graph-branches");
-    for(const {category,count} of counts.filter(c=>c.count)){
-      const node=make("button",category+" · "+count,"graph-node "+category.toLowerCase());
-      node.type="button";node.addEventListener("click",()=>{chooseProject(p.id,false,true);noticeCategory=category;renderNotifications();});
-      branches.append(node);
-    }
-    return withChildren(group,hub,branches);
-  });
-  safeList("graph-nodes",graph,"No reviewed work or material notifications for these sites.");
+function materialDetails(n){
+  const details=make("details","","resource-row-details");
+  details.append(make("summary","Details"));
+  details.append(make("p","Source note: "+(n.date||"Date not published")));
+  if(n.due_date) details.append(make("p","Due: "+n.due_date));
+  details.append(make("p","Resolution not confirmed"));
+  const link=make("a",n.source_doc_url?"Original reviewed note":"Full site records");
+  link.href=n.source_doc_url||("./extraction.html?site="+siteQuery(n.project_id));details.append(link);
+  return details;
+}
+function renderResourceDesk(projects) {
+  const selector=byId("resource-site");
+  const prior=selector.value;
+  selector.replaceChildren(new Option("All sites in current filter",""),...projects.map(p=>new Option(p.name,p.id)));
+  if(projects.some(p=>p.id===prior)) selector.value=prior;
+  const selected=selector.value;
+  const chosen=projects.filter(p=>!selected||p.id===selected);
+  for(const b of document.querySelectorAll("[data-resource-tab]")) b.setAttribute("aria-pressed",String(b.dataset.resourceTab===resourceTab));
+  const root=byId("resource-rows");
+  if(resourceTab!=="materials"){
+    root.replaceChildren(make("p",resourceTab==="stock"?"No verified public on-site stock balances.":"No approved public labour-demand records.","resource-empty"));
+    return;
+  }
+  const ids=new Set(chosen.map(p=>p.id));
+  const rows=dataset.notices.filter(n=>n.category==="Materials"&&ids.has(n.project_id));
+  if(!rows.length){root.replaceChildren(make("p","No reviewed material instructions for this selection.","resource-empty"));return;}
+  const table=make("table","","resource-table");
+  const head=make("thead");const h=make("tr");
+  for(const label of ["Site","Material instruction","Quantity / estimate","Details"]){const th=make("th",label);th.scope="col";h.append(th);}
+  head.append(h);table.append(head);
+  const body=make("tbody");
+  for(const n of rows){
+    const tr=make("tr");
+    const site=make("td",projectName(n.project_id),"resource-site-cell");
+    const instruction=make("td",n.instruction,"resource-instruction");
+    const qty=make("td",[n.quantity,n.unit].filter(x=>x!==null&&x!==undefined&&String(x).trim()!=="").join(" · ")||"Not recorded","resource-quantity");
+    const detail=make("td");detail.append(materialDetails(n));
+    tr.append(site,instruction,qty,detail);body.append(tr);
+  }
+  table.append(body);root.replaceChildren(table);
 }
 function setView(mode){
   viewMode=mode;
+  byId("map-title").textContent=mode==="resources"?"Materials & Labour":"Project map";
   byId("geo-view").setAttribute("aria-pressed",String(mode==="map"));
-  byId("graph-view").setAttribute("aria-pressed",String(mode==="graph"));
-  byId("map-canvas").hidden=mode==="graph";
-  byId("planning-graph").hidden=mode!=="graph";
+  byId("resource-view").setAttribute("aria-pressed",String(mode==="resources"));
+  byId("map-canvas").hidden=mode==="resources";
+  byId("resource-desk").hidden=mode!=="resources";
+  byId("map-fallback").hidden=true;
+  document.body.classList.toggle("resource-mode",mode==="resources");
+  if(mode==="resources"){activeSiteId="";showAllNotices=false;resourceTab="materials";}
   render();
 }
 function updateProjectIndex(projects) {
@@ -274,17 +305,12 @@ function updateContext(overrideId) {
 function noticeCard(n) {
   const wrapper = make("article", "", "card notice-item");
   const head = make("div", "", "notice-item-head");
-  const badge = make("span", readable(n.category || "Other"), "notice-type " + String(n.category || "").toLowerCase());
-  const sourceLabel = make("span", "Site note · " + (n.date || "Date not published"), "notice-source");
-  head.append(badge, sourceLabel);
+  head.append(make("span", readable(n.category || "Other"), "notice-type " + String(n.category || "").toLowerCase()));
+  if(!selectedProject())head.append(make("span",projectName(n.project_id),"card-meta"));
   const title = make("h3", n.instruction || "Public instruction not provided");
-  const project = make("p", projectName(n.project_id), "card-meta");
-  const bottom = make("div", "", "notice-item-bottom");
-  if (n.due_date) bottom.append(make("span", "Source due date: " + n.due_date, "notice-due"));
-  bottom.append(make("span", "Resolution not recorded in this public view", "notice-resolution"));
-  const link = make("a", n.source_doc_url ? "Open original site note" : "Site updates", "notice-related");
-  link.href = n.source_doc_url || ("./extraction.html?site=" + siteQuery(n.project_id));
-  return withChildren(wrapper, head, title, project, bottom, link);
+  if(n.category==="Materials"&&(n.quantity||n.unit))wrapper.append(head,title,make("p",[n.quantity,n.unit].filter(Boolean).join(" · "),"resource-quantity"),materialDetails(n));
+  else wrapper.append(head,title,materialDetails(n));
+  return wrapper;
 }
 
 function renderNotifications() {
@@ -306,7 +332,7 @@ function renderNotifications() {
     : "Select a site here, in the directory, or on the map. No notice is assumed unresolved.";
   byId("notice-site").value = selectedProject();
   const details = byId("notifications");
-  details.hidden = !activeSiteId && !showAllNotices;
+  details.hidden = viewMode==="resources" || (!activeSiteId && !showAllNotices);
   byId("clear-map-selection").hidden = !activeSiteId;
   byId("map-selection-hint").textContent = activeSiteId
     ? "Selected: " + (site?.name || "site") + " · Tap empty map or Back to all sites"
@@ -338,7 +364,7 @@ function render() {
 
   updateProjectIndex(projects);
   drawMap(projects);
-  if(viewMode==="graph") renderPlanningGraph(projects);
+  if(viewMode==="resources") renderResourceDesk(projects);
   updateContext();
   renderNotifications();
   const reviewedSites = new Set(progress.map(r => r.project_id)).size;
@@ -429,7 +455,10 @@ byId("company-filter").addEventListener("change", () => {
 byId("back-to-sites").addEventListener("click", () => clearSiteSelection(true,true));
 byId("clear-map-selection").addEventListener("click", () => clearSiteSelection(false,true));
 byId("geo-view").addEventListener("click",()=>setView("map"));
-byId("graph-view").addEventListener("click",()=>setView("graph"));
+for(const link of document.querySelectorAll('a[href="./#map"]'))link.addEventListener("click",()=>{if(viewMode!=="map")setView("map");});
+byId("resource-view").addEventListener("click",()=>setView("resources"));
+for(const b of document.querySelectorAll("[data-resource-tab]"))b.addEventListener("click",()=>{resourceTab=b.dataset.resourceTab;renderResourceDesk(filteredProjects());});
+byId("resource-site").addEventListener("change",()=>renderResourceDesk(filteredProjects()));
 byId("field-filter-toggle").addEventListener("click",()=>{
   const open=document.body.classList.toggle("field-filters-open");
   byId("field-filter-toggle").setAttribute("aria-expanded",String(open));
@@ -450,6 +479,7 @@ document.addEventListener("keydown", e => {
 });
 for (const link of document.querySelectorAll('a[href="./#notifications"]'))
   link.addEventListener("click", () => {
+    if(viewMode==="resources")setView("map");
     showAllNotices = !activeSiteId;
     render();
     const menu = link.closest(".phone-menu");

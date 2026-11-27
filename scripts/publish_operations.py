@@ -191,6 +191,8 @@ def build(tables, out, received_at, source_map=None, semantic_report=None):
     notices = []
     for item in compiled["items"]:
         candidate = {**{k: item[k] for k in notice_keys}, "date": source_dates[item["source_id"]]}
+        if item["category"] == "Materials":
+            candidate.update(quantity=item["quantity"], unit=item["unit"])
         if item["source_id"] in doc_links:
             candidate["source_doc_url"] = doc_links[item["source_id"]]
         reviewed = reviewed_closure(approved_notice_rows[item["notification_id"]], item["notification_id"])

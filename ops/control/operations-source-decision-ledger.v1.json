@@ -468,6 +468,33 @@
       "evidence_url": "https://github.com/FabinGurung/jp-site-operations/actions/runs/45411055556",
       "result": "PR_QA_PENDING",
       "limitations": "No confirmed remaining-work backlog, material requisition quantities or manpower; graph represents reviewed category membership only. Physical device QA not performed."
+    },
+    {
+      "id": "OPS-DEC-20261125-MATERIAL-LABOUR-DESK",
+      "date_npt": "2026-11-25",
+      "decision": "25 November owner requested no map redesign; replace confusing Planning graph with Materials & Labour, materials default, on-site and labour tabs optional, compact source-backed material rows and expandable details, no duplicated site context. Only the existing compiled, reviewed, public Materials instructions expose their quantity/unit, including nonnumeric estimate/count wording unchanged. No inferred requirement/availability or stock arithmetic. Source directory identifies private Fishtail and Rohini inventory movement workbooks (Movement ID, Date, Project ID, Material, Movement, Quantity, Unit), not public balance authority; no public approved labour-demand source. Explicit unknown/absent feed, never zero, no private inventory/personnel/payroll imports. Prior PR58 production 45610892695 verified all six jobs and exact readback 29 projects/5 notices. No Sheets or ACL changes. New CI and live readback pending.",
+      "fact_sources": [
+        "notices",
+        "projects",
+        "directory"
+      ],
+      "code_owner": "GIT_OPERATIONS",
+      "artifacts": [
+        "publication/operations/index.html",
+        "publication/operations/styles.css",
+        "publication/operations/app.js",
+        "scripts/publish_operations.py",
+        "scripts/build_status_filter_fixture.py",
+        "scripts/status_filter_browser_qa.cjs",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json"
+      ],
+      "source_readback": "Reviewed notices header and source directory read; both private inventory headers verified, no stock balance or private rows projected.",
+      "evidence_url": "https://github.com/FabinGurung/jp-site-operations/actions/runs/45610892695",
+      "result": "PR_QA_PENDING",
+      "limitations": "Stock and labour demand are not approved public feeds; no fabrication or source modifications."
     }
   ]
 }

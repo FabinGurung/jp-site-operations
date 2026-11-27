@@ -49,7 +49,7 @@
   <span id="receipt" class="visually-hidden" role="status">Loading publication readback…</span>
   <section id="map" class="surface map-section" aria-labelledby="map-title">
     <div class="section-head"><div><span class="eyebrow">MAP · REVIEWED NOTIFICATIONS</span><h2 id="map-title">Project map</h2></div><p>Only sites with reviewed notifications are emphasized. Other sites remain available.</p></div>
-    <div class="field-toolbar"><div class="view-switch" role="group" aria-label="Site view"><button type="button" id="geo-view" aria-pressed="true">Map</button><button type="button" id="graph-view" aria-pressed="false">Planning graph</button></div><button type="button" id="field-filter-toggle" aria-expanded="false" aria-controls="field-filter-drawer">Filters</button></div>
+    <div class="field-toolbar"><div class="view-switch" role="group" aria-label="Site view"><button type="button" id="geo-view" aria-pressed="true">Map</button><button type="button" id="resource-view" aria-pressed="false">Materials &amp; Labour</button></div><button type="button" id="field-filter-toggle" aria-expanded="false" aria-controls="field-filter-drawer">Filters</button></div>
     <div id="field-filter-drawer" class="field-filter-drawer">
     <details class="advanced-map-settings"><summary>Map data layers</summary><div class="map-modes" role="group" aria-label="Choose site information layer">
       <button type="button" data-map-mode="projects" aria-pressed="false">Sites</button>
@@ -79,7 +79,7 @@
     </div>
     <p id="attention-count" class="field-attention" role="status">Reading reviewed notifications…</p>
     <div id="map-canvas" role="region" aria-label="Interactive project location map" tabindex="0"></div>
-    <section id="planning-graph" class="planning-graph" hidden aria-label="Reviewed notification relationships"><p class="graph-hint">Site → category. Connections show recorded notifications, not task dependencies or geographic routes.</p><div id="graph-nodes"></div></section>
+    <section id="resource-desk" class="resource-desk" hidden aria-label="Materials and labour"><div class="resource-tabs" role="group" aria-label="Resource type"><button type="button" data-resource-tab="materials" aria-pressed="true">Materials</button><button type="button" data-resource-tab="stock" aria-pressed="false">On site</button><button type="button" data-resource-tab="labour" aria-pressed="false">Labour</button></div><label for="resource-site" class="resource-label">Site</label><select id="resource-site"><option value="">All current sites</option></select><div id="resource-rows" aria-live="polite"></div><details class="resource-help"><summary>Source and verification details</summary><p>Materials shows reviewed material instructions, not a certified list of outstanding orders. Quantity and unit are shown only as recorded. On-site balances and labour demand are not connected to an approved public source. Private inventory, attendance and payroll remain private.</p><a href="./extraction.html">Full reviewed site records</a> · <a href="./sources.html">Source directory</a></details></section>
     <p id="map-fallback" class="help" hidden>Map tiles are not available. Use the project navigator to browse all approved listings.</p>
 
   </section>

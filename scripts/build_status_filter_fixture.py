@@ -77,7 +77,7 @@ preview["notices"] = [
      "instruction":"Synthetic site-supervision note","due_date":"",
      "display_order":2,"date":"2026-11-11"},
     {"notification_id":"QAN-003","project_id":"PRJ-999903","category":"Materials",
-     "instruction":"Synthetic materials instruction","due_date":"",
+     "instruction":"Synthetic materials instruction","quantity":"12","unit":"bags","due_date":"",
      "display_order":1,"date":"2026-11-12"},
 ]
 output.write_text(json.dumps(preview), encoding="utf-8")
