@@ -6,7 +6,9 @@ on:
       - 'publication/static-operations-manifest.json'
       - '.github/workflows/operations-sheets-pages.yml'
   push:
-    branches: [main]
+    branches:
+      - main
+      - feature/daily-ops-current-work
     paths:
       - 'publication/static-operations/**'
       - 'publication/static-operations-manifest.json'
