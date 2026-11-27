@@ -230,3 +230,5 @@ Owner requested completed projects hidden until explicit completed filter or dir
 ## 27 November 2026 — Drive-first minimal field front
 
 Owner-directed field homepage only operational facts; removed audit/guide/closure explanation, navigation to source history, gallery and redundant site detail. Map and quiet pins retained; materials/stock/labour desk retained; unknown stock/labour not fabricated. Previous HTML/JS/CSS verified byte-equivalent in Drive PRE 1FhxiBsiqmkZNGAOGcgp0G9dvNSMoIZygSBYdyAXSD3o. Drive code library is authoritative, executable Git copies only, explicit dispatch for data read/build; no new automatic source edits or scheduling. Transitional Actions builder remains until static artifact-only handoff validated. No full repository file deletions pending owner review. Secondary routes remain direct-access during transition.
+
+Owner-authorized publication may use an explicitly marked main release merge [JP-OWNER-PUBLISH] when the connector cannot dispatch workflows. Ordinary pushes remain test-only. Only attach the marker when the owner asks to update/deploy; never use it for unrelated edits.
