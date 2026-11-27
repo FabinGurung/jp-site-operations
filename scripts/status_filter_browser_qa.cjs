@@ -55,11 +55,13 @@ async function markerColours(page) {
     const mobile = await browser.newPage({viewport:{width:390,height:844},isMobile:true,deviceScaleFactor:1,hasTouch:true});
     await ready(mobile);
     assert.equal(await mobile.locator(".phone-menu").count(),0);
-    assert.equal(await mobile.locator(".compact-nav a").count(),3);
+    assert.equal(await mobile.locator(".compact-nav a").count(),2);
     assert.equal(await mobile.locator(".compact-nav a[href='./extraction.html']").isVisible(),false);
     assert.equal(await mobile.locator("#navigation-panel").isVisible(),false);
     assert.equal(await mobile.locator("#field-filter-drawer").isVisible(),false);
     assert.equal(await mobile.locator("#map-canvas").isVisible(),true);
+    assert.equal(await mobile.locator(".archive-route,.notice-disclaimer,#context-card,.source-tag").count(),0);
+    assert.ok(!(await mobile.locator("body").innerText()).includes("Resolution not recorded"));
     assert.ok(await mobile.locator(".compact-nav").evaluate(el=>el.getBoundingClientRect().right<=window.innerWidth));
     assert.ok(Number.parseFloat(await mobile.locator("#project-filter").evaluate(el=>getComputedStyle(el).fontSize))>=16);
     for (const link of await mobile.locator(".compact-nav a:visible").all())
@@ -219,9 +221,9 @@ async function markerColours(page) {
     assert.equal(await mobile.locator(".resource-table").count(),0);
     await mobile.locator("#resource-site").selectOption("");
     await mobile.locator('[data-resource-tab="stock"]').click();
-    assert.ok((await mobile.locator("#resource-rows").textContent()).includes("No verified public"));
+    assert.ok((await mobile.locator("#resource-rows").textContent()).includes("Stock not recorded"));
     await mobile.locator('[data-resource-tab="labour"]').click();
-    assert.ok((await mobile.locator("#resource-rows").textContent()).includes("No approved public labour-demand"));
+    assert.ok((await mobile.locator("#resource-rows").textContent()).includes("Labour not recorded"));
     assert.ok(await mobile.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2));
     await mobile.locator("#geo-view").click();
     assert.equal(await mobile.locator("#map-canvas").isVisible(),true);
