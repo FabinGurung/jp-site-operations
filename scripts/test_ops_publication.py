@@ -80,7 +80,8 @@ class OperationsPublicationTest(unittest.TestCase):
         self.assertNotIn('p.id + " · " + info.note', app)
         self.assertNotIn('new Option(p.name + " · " + p.id', app)
         self.assertNotIn("Stable record:", (root/"closed-work.js").read_text())
-        self.assertIn("Earlier notifications in Google Drive", (root/"index.html").read_text())
+        self.assertNotIn("Earlier notifications in Google Drive", (root/"index.html").read_text())
+        self.assertNotIn("Resolution not recorded", app)
 
 
     def test_scope_privacy_and_legacy_routes(self):
@@ -130,7 +131,8 @@ class OperationsPublicationTest(unittest.TestCase):
             self.assertEqual(data["identity"]["public_project_count"], 1)
             self.assertTrue(data["identity"]["nonpublic_or_retired_rows_excluded"])
             library = "https://fabingurung.github.io/jp-field-desk-library/"
-            for path in ("index.html", "owner-help.html", "resources/index.html"):
+            self.assertNotIn(f'href="{library}"', (out / "index.html").read_text())
+            for path in ("owner-help.html", "resources/index.html"):
                 with self.subTest(path=path):
                     html = (out / path).read_text()
                     self.assertIn(f'href="{library}"', html)
@@ -164,7 +166,7 @@ class OperationsPublicationTest(unittest.TestCase):
                 self.assertIn('data-map-mode="' + key + '"', ops_html)
             for key in ("resources", "manpower"):
                 self.assertNotIn('data-map-mode="' + key + '"', ops_html)
-            self.assertIn("field-pulse", ops_html)
+            self.assertNotIn("field-pulse", ops_html)
             self.assertIn('data-project-status="Completed"', ops_html)
             self.assertIn('data-project-status="Construction"', ops_html)
             self.assertIn('data-project-status="Approval"', ops_html)
@@ -176,7 +178,7 @@ class OperationsPublicationTest(unittest.TestCase):
             self.assertIn("Companies and Organizations", wall)
             self.assertIn("Publishing Source Directory", wall)
             self.assertIn("02 Website Sheets and Registers", wall)
-            self.assertIn('href="./memory-wall.html"', ops_html)
+            self.assertNotIn('href="./memory-wall.html"', ops_html)
             # Hybrid navigation: notifications first, map second. Reports and
             # source provenance have their own internal pages on the same site.
             self.assertLess(ops_html.index('id="map"'), ops_html.index('id="notifications"'))
@@ -185,8 +187,8 @@ class OperationsPublicationTest(unittest.TestCase):
             self.assertIn('id="directory-toggle"', ops_html)
             self.assertNotIn('id="progress"', ops_html)
             self.assertNotIn('id="sources"', ops_html)
-            self.assertIn('href="./progress.html"', ops_html)
-            self.assertIn('href="./sources.html"', ops_html)
+            self.assertNotIn('href="./progress.html"', ops_html)
+            self.assertNotIn('href="./sources.html"', ops_html)
             self.assertIn('aria-current="page">Map</a>', ops_html)
             self.assertIn('id="notice-site"', ops_html)
             for key in ("all", "Work", "Materials", "Supervision"):
@@ -229,7 +231,7 @@ class OperationsPublicationTest(unittest.TestCase):
             self.assertNotIn('class="phone-menu"', ops_html)
             self.assertNotIn('class="phone-menu"', sources)
             self.assertNotIn('class="phone-menu"', report)
-            self.assertIn('href="./extraction.html"', ops_html)
+            self.assertNotIn('href="./extraction.html"', ops_html)
             self.assertIn('id="updates-project"', (out / "extraction.html").read_text())
             self.assertIn('id="updates-meaning"', (out / "extraction.html").read_text())
             self.assertNotIn('class="extract-lane"', (out / "extraction.html").read_text())

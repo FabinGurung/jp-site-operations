@@ -85,7 +85,7 @@ on:
       - 'scripts/verify_site_capture_source.py'
       - 'scripts/test_ops_capture_source.py'
       - '.github/workflows/operations-sheets-pages.yml'
-  # Owner-directed refresh only: no periodic automatic data publication.
+  # Owner-directed refresh only: normal pushes test; explicit dispatch or marked owner-requested main release reads sources.
   workflow_dispatch:
     inputs:
       publish:
@@ -158,9 +158,9 @@ jobs:
     if: >-
       always() &&
       github.ref == 'refs/heads/main' &&
-      github.event_name != 'pull_request' &&
+      (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[JP-OWNER-PUBLISH]'))) &&
       needs.test.result == 'success' &&
-      (github.event_name == 'workflow_dispatch' || vars.JP_OPERATIONS_PAGES_MODE == 'SHEETS_V2') &&
+      vars.JP_OPERATIONS_PAGES_MODE == 'SHEETS_V2' &&
       needs['browser-status-qa'].result == 'success'
     needs: [test, browser-status-qa]
     runs-on: ubuntu-24.04
@@ -208,7 +208,7 @@ jobs:
           path: _site
 
   deploy:
-    if: github.ref == 'refs/heads/main' && always() && needs.project.result == 'success' && vars.JP_OPERATIONS_PAGES_MODE == 'SHEETS_V2' && (github.event_name != 'workflow_dispatch' || inputs.publish)
+    if: github.ref == 'refs/heads/main' && always() && needs.project.result == 'success' && vars.JP_OPERATIONS_PAGES_MODE == 'SHEETS_V2' && ((github.event_name == 'workflow_dispatch' && inputs.publish) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[JP-OWNER-PUBLISH]')))
     needs: project
     runs-on: ubuntu-24.04
     timeout-minutes: 10

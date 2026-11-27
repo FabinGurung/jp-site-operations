@@ -11,23 +11,23 @@
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script defer src="./app.js"></script>
 </head>
-<body class="field-home">
+<body class="field-home" data-jp-no-gallery>
 <a class="skip" href="#main">Skip to dashboard</a>
 <header class="north">
   <div class="brand"><span class="brand-icon" aria-hidden="true">▦</span><div><span class="eyebrow">A9 · Site operations</span><strong>JP Site <span>Operations</span></strong></div></div>
   <nav class="desktop-nav compact-nav" aria-label="Site navigation">
 <a href="./#map" aria-current="page">Map</a>
 <a href="./#notifications">Notifications</a>
-<a href="./extraction.html">Site updates</a>
+
 </nav>
 </header>
 <div class="workbench">
 <aside class="west" id="navigation-panel" aria-labelledby="navigation-label">
-  <p class="eyebrow" id="navigation-label">FIND A PROJECT</p>
-  <h2>Find a site</h2>
+  <span id="navigation-label" class="visually-hidden">Sites</span>
+  <h2>Sites</h2>
   <label for="project-filter">Site / project</label>
-  <select id="project-filter"><option value="">All public projects</option></select>
-  <label class="desktop-status-label" for="status-filter">Project status (as listed in Google Sheets)</label>
+  <select id="project-filter"><option value="">All sites</option></select>
+  <label class="desktop-status-label" for="status-filter">Status</label>
   <select id="status-filter" class="desktop-status-control" aria-describedby="status-source-hint">
     <option value="all">Current (excludes completed)</option>
     <option value="Construction">Under construction</option>
@@ -36,28 +36,28 @@
     <option value="Maintenance">Maintenance</option>
     <option value="unpublished">Not stated / other</option>
   </select>
-  <p id="status-source-hint" class="help">Project status is a source register value, not engineer acceptance.</p>
-  <label for="company-filter">Executing organization</label>
-  <select id="company-filter"><option value="">All organizations</option></select>
-  <button type="button" id="reset-filters" class="quiet">Clear filters</button>
+  <span id="status-source-hint" hidden></span>
+  <label for="company-filter">Company</label>
+  <select id="company-filter"><option value="">All companies</option></select>
+  <button type="button" id="reset-filters" class="quiet">Reset</button>
   <div class="side-divider"></div>
-  <button id="directory-toggle" class="directory-toggle" type="button" aria-controls="project-list" aria-expanded="false">Browse site directory <span id="project-count" class="count">—</span></button>
+  <button id="directory-toggle" class="directory-toggle" type="button" aria-controls="project-list" aria-expanded="false">Sites <span id="project-count" class="count">—</span></button>
   <div id="project-list" class="project-list" aria-live="polite"><p>Loading approved project listings…</p></div>
-  <p class="help">Projects without approved public coordinates remain listed without a map pin.</p>
+  
 </aside>
 <main id="main" class="centre">
-  <span id="receipt" class="visually-hidden" role="status">Loading publication readback…</span>
+  <span id="receipt" class="visually-hidden" role="status"></span>
   <section id="map" class="surface map-section" aria-labelledby="map-title">
-    <div class="section-head"><div><span class="eyebrow">MAP · REVIEWED NOTIFICATIONS</span><h2 id="map-title">Project map</h2></div><p>Only sites with reviewed notifications are emphasized. Other sites remain available.</p></div>
+    <div class="section-head"><div><h2 id="map-title">Project map</h2></div></div>
     <div class="field-toolbar"><div class="view-switch" role="group" aria-label="Site view"><button type="button" id="geo-view" aria-pressed="true">Map</button><button type="button" id="resource-view" aria-pressed="false">Materials &amp; Labour</button></div><button type="button" id="field-filter-toggle" aria-expanded="false" aria-controls="field-filter-drawer">Filters</button></div>
     <div id="field-filter-drawer" class="field-filter-drawer">
-    <details class="advanced-map-settings"><summary>Map data layers</summary><div class="map-modes" role="group" aria-label="Choose site information layer">
+    <details class="advanced-map-settings"><summary>Map layers</summary><div class="map-modes" role="group" aria-label="Choose site information layer">
       <button type="button" data-map-mode="projects" aria-pressed="false">Sites</button>
       <button type="button" data-map-mode="work" aria-pressed="false">Work</button>
       <button type="button" data-map-mode="activities" aria-pressed="true">Notifications</button>
     </div></details>
     <div class="mobile-status-filter" aria-label="Filter sites by recorded project status">
-      <div class="mobile-filter-heading"><strong>Show sites by status</strong><span>From Projects and Locations Sheet</span></div>
+      <div class="mobile-filter-heading"><strong>Status</strong></div>
       <div class="status-chip-scroll" role="group" aria-label="Project status filter">
         <button type="button" data-project-status="all" aria-pressed="true">Current <span data-status-count="all">—</span></button>
         <button type="button" data-project-status="Construction" aria-pressed="false">Construction <span data-status-count="Construction">—</span></button>
@@ -66,43 +66,43 @@
         <button type="button" data-project-status="Maintenance" aria-pressed="false">Maintenance <span data-status-count="Maintenance">—</span></button>
         <button type="button" data-project-status="unpublished" aria-pressed="false">Not stated <span data-status-count="unpublished">—</span></button>
       </div>
-      <p id="status-filter-summary" class="status-filter-summary" role="status" aria-live="polite">Reading approved project status values…</p>
+      <p id="status-filter-summary" class="status-filter-summary" role="status" aria-live="polite"></p>
     </div>
-    <div id="map-mode-description" class="map-mode-description" role="status" aria-live="polite" hidden>Map locations follow approved public coordinates.</div>
-    <div id="field-pulse" class="field-pulse" role="status" aria-live="polite" hidden>Loading reviewed site records…</div>
-    <div class="map-field-actions"><span id="map-selection-hint" role="status">Tap a pin to open that site's notifications</span><button id="clear-map-selection" type="button" hidden>All sites</button></div>
+    
+    
+    <div class="map-field-actions"><span id="map-selection-hint" hidden></span><button id="clear-map-selection" type="button" hidden>All sites</button></div>
     <div class="company-legend" aria-label="Map colours by executing organization">
-      <p>In Notifications mode, quiet pins have no reviewed notices; numbered pins show reviewed notifications. Colours identify the executing organization.</p>
+      
       <ul id="company-legend" aria-live="polite"></ul>
     </div>
-    <div class="scout-settings"><button id="scout-motion" class="scout-motion" type="button" aria-pressed="false">Pause Scout</button><a class="quiet-link" href="./sources.html">Data sources</a><a class="quiet-link" href="./extraction.html">Other reviewed records</a></div>
+    <div class="scout-settings"><button id="scout-motion" class="scout-motion" type="button" aria-pressed="false">Pause Scout</button></div>
     </div>
-    <p id="attention-count" class="field-attention" role="status">Reading reviewed notifications…</p>
+    <p id="attention-count" class="field-attention" role="status"></p>
     <div id="map-canvas" role="region" aria-label="Interactive project location map" tabindex="0"></div>
-    <section id="resource-desk" class="resource-desk" hidden aria-label="Materials and labour"><div class="resource-tabs" role="group" aria-label="Resource type"><button type="button" data-resource-tab="materials" aria-pressed="true">Materials</button><button type="button" data-resource-tab="stock" aria-pressed="false">On site</button><button type="button" data-resource-tab="labour" aria-pressed="false">Labour</button></div><label for="resource-site" class="resource-label">Site</label><select id="resource-site"><option value="">All current sites</option></select><div id="resource-rows" aria-live="polite"></div><details class="resource-help"><summary>Source and verification details</summary><p>Materials shows reviewed material instructions, not a certified list of outstanding orders. Quantity and unit are shown only as recorded. On-site balances and labour demand are not connected to an approved public source. Private inventory, attendance and payroll remain private.</p><a href="./extraction.html">Full reviewed site records</a> · <a href="./sources.html">Source directory</a></details></section>
-    <p id="map-fallback" class="help" hidden>Map tiles are not available. Use the project navigator to browse all approved listings.</p>
+    <section id="resource-desk" class="resource-desk" hidden aria-label="Materials and labour"><div class="resource-tabs" role="group" aria-label="Resource type"><button type="button" data-resource-tab="materials" aria-pressed="true">Materials</button><button type="button" data-resource-tab="stock" aria-pressed="false">On site</button><button type="button" data-resource-tab="labour" aria-pressed="false">Labour</button></div><label for="resource-site" class="resource-label">Site</label><select id="resource-site"><option value="">All current sites</option></select><div id="resource-rows" aria-live="polite"></div></section>
+    <p id="map-fallback" class="help" hidden>Map unavailable</p>
 
   </section>
   <section id="notifications" class="surface notification-centre" hidden aria-labelledby="notifications-title">
-    <div class="section-head"><div><span class="eyebrow">PROJECT DETAILS · REVIEWED NOTIFICATIONS</span><h2 id="notifications-title" tabindex="-1">Site instructions</h2></div><span class="source-tag">Reviewed source records</span></div>
-    <div class="detail-actions"><button type="button" id="back-to-sites" aria-label="Back to all sites">← Back to all sites</button><a href="./extraction.html" id="site-progress-link">Site updates</a></div>
-    <div id="context-card" class="context-card" aria-live="polite"></div>
+    <div class="section-head"><div><h2 id="notifications-title" tabindex="-1">Notifications</h2></div></div>
+    <div class="detail-actions"><button type="button" id="back-to-sites" aria-label="Back to all sites">← Map</button></div>
+    
     <div class="notice-dashboard">
       <div class="notice-dashboard-top">
-        <div><span class="eyebrow">NOTIFICATION DESK</span><h3 id="notice-focus-title">All approved sites</h3><p id="notice-focus-detail">Choose a site here, in the site directory, or on the map to view its notifications.</p></div>
-        <div class="notice-summary" aria-live="polite"><strong id="notice-total">—</strong><span>reviewed notifications shown</span></div>
+        <div><h3 id="notice-focus-title">All sites</h3></div>
+        <div class="notice-summary" aria-live="polite"><strong id="notice-total">—</strong><span>Notifications</span></div>
       </div>
-      <label for="notice-site" class="notice-label">Show notifications for</label>
-      <select id="notice-site" aria-describedby="notice-focus-detail"><option value="">All public sites</option></select>
+      <label for="notice-site" class="notice-label">Site</label>
+      <select id="notice-site"><option value="">All sites</option></select>
       <div class="notice-category-tabs" role="group" aria-label="Filter notifications by recorded category">
         <button class="secondary-notice-tab" type="button" data-notice-category="all" aria-pressed="false">All <span data-notice-count="all">—</span></button>
         <button type="button" data-notice-category="Work" aria-pressed="true">Work <span data-notice-count="Work">—</span></button>
         <button type="button" data-notice-category="Materials" aria-pressed="false">Materials <span data-notice-count="Materials">—</span></button>
         <button class="secondary-notice-tab" type="button" data-notice-category="Supervision" aria-pressed="false">Supervision <span data-notice-count="Supervision">—</span></button>
       </div>
-      <div id="notice-list" class="cards notice-list" aria-live="polite"><p>Loading reviewed notifications…</p></div>
-      <p class="archive-route"><a href="https://drive.google.com/drive/folders/1Fu2Hsw-kmc83BpIxEe4C4jGB1qwKZ4wh">Earlier notifications in Google Drive</a> <span>Older instructions are preserved, not listed as current or marked completed.</span></p>
-      <p class="notice-disclaimer">The source contains published instructions, categories, dates and optional due dates. It does not establish whether a notice has been closed. No new instructions can be issued from this public page.</p>
+      <div id="notice-list" class="cards notice-list" aria-live="polite"><p></p></div>
+      
+      
     </div>
   </section>
 
@@ -111,7 +111,7 @@
 </main>
 
 </div>
-<footer class="south"><div class="south-inner"><div><strong>JP Site Operations</strong><p>Project map and selected-site notifications are drawn from approved public Google Sheets fields.</p></div><div class="source-links"><a href="./sources.html">Data sources</a><a href="./progress.html">Older reports</a><a href="./memory-wall.html">Version history</a><a href="https://fabingurung.github.io/jp-field-desk-library/">Resource library</a></div></div></footer>
-<noscript><p class="nojs">JavaScript is needed for the map and filtered reports. See the <a href="./owner-help.html">operator help page</a>.</p></noscript>
+
+<noscript><p class="nojs">Enable JavaScript to view the map.</p></noscript>
 <div class="site-scout scout-roaming" id="site-scout" aria-hidden="true"><svg viewBox="0 0 72 72" width="48" height="48"><rect x="12" y="28" width="48" height="32" rx="13" fill="#eaf5ed" stroke="#1a624c" stroke-width="3"/><path d="M16 29V24a20 20 0 0 1 40 0v5M11 29h50" fill="#f6c84e" stroke="#784d16" stroke-width="3" stroke-linejoin="round"/><path d="M36 8v13" stroke="#784d16" stroke-width="3"/><circle cx="26" cy="41" r="3" fill="#173c34"/><circle cx="46" cy="41" r="3" fill="#173c34"/><path d="M29 49q7 5 14 0" fill="none" stroke="#173c34" stroke-width="2.5" stroke-linecap="round"/><rect x="45" y="50" width="21" height="18" rx="3" fill="#fff" stroke="#246b9a" stroke-width="2"/><path d="m49 57 3 3 6-7" fill="none" stroke="#1a624c" stroke-width="2" stroke-linecap="round"/></svg></div>
 </body></html>

@@ -12,7 +12,7 @@ BODY_END = re.compile(r'</body\s*>', re.I)
 
 
 def inject(html, script):
-    if MARKER in html or REDIRECT.search(html):
+    if MARKER in html or "data-jp-no-gallery" in html or REDIRECT.search(html):
         return html
     endings = list(BODY_END.finditer(html))
     if not endings:

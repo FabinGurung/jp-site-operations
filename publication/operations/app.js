@@ -75,11 +75,11 @@ const projectRecords = pid => ({
 const mapReading = p => {
   const r = projectRecords(p.id);
   if (mapMode === "work") return {badge: r.work.length ? String(r.work.length) : "–",
-    note: r.work.length + " published work reports · remaining work unknown", kind: "report"};
-  if (mapMode === "activities") {const count=r.notices.filter(fieldNotice).length;return {badge:count?String(count):"",note:count?count+" reviewed work/material notifications · resolution not confirmed":"No reviewed work/material notifications",kind:count?"review notice-highlight":"location notice-quiet"};}
+    note: r.work.length + " work reports", kind: "report"};
+  if (mapMode === "activities") {const count=r.notices.filter(fieldNotice).length;return {badge:count?String(count):"",note:count?count+" notifications":"No notifications",kind:count?"review notice-highlight":"location notice-quiet"};}
   if (mapMode === "resources") return {badge:"?", note:"Material/equipment demand not connected", kind:"unknown"};
   if (mapMode === "manpower") return {badge:"?", note:"Crew-demand source not connected", kind:"unknown"};
-  return {badge:"•", note:p.status || "Published project listing · no public status", kind:"location"};
+  return {badge:"•", note:p.status || "", kind:"location"};
 };
 const hasPin = p => Number.isFinite(p.lat) && Number.isFinite(p.lng);
 // Colours describe the public executing organization, independently of map layer.
@@ -187,8 +187,8 @@ function drawMap(projects) {
     const popup = make("div", "", "site-map-popup");
     withChildren(popup, make("strong", p.name), make("p", company), make("p", info.note));
     const entries = projectRecords(p.id);
-    popup.append(make("p", entries.work.length + " public reports · " + entries.notices.length + " reviewed instructions"));
-    const select = make("button", "View notifications", "quiet");
+
+    const select = make("button", "Notifications", "quiet");
     select.type = "button";
     select.addEventListener("click", () => chooseProject(p.id));
     popup.append(select);
@@ -208,32 +208,32 @@ function drawMap(projects) {
 function materialDetails(n){
   const details=make("details","","resource-row-details");
   details.append(make("summary","Details"));
-  details.append(make("p","Source note: "+(n.date||"Date not published")));
+  details.append(make("p","Date: "+(n.date||"Date not published")));
   if(n.due_date) details.append(make("p","Due: "+n.due_date));
-  details.append(make("p","Resolution not confirmed"));
-  const link=make("a",n.source_doc_url?"Original reviewed note":"Full site records");
+  
+  const link=make("a",n.source_doc_url?"Original note":"Site records");
   link.href=n.source_doc_url||("./extraction.html?site="+siteQuery(n.project_id));details.append(link);
   return details;
 }
 function renderResourceDesk(projects) {
   const selector=byId("resource-site");
   const prior=selector.value;
-  selector.replaceChildren(new Option("All sites in current filter",""),...projects.map(p=>new Option(p.name,p.id)));
+  selector.replaceChildren(new Option("All sites",""),...projects.map(p=>new Option(p.name,p.id)));
   if(projects.some(p=>p.id===prior)) selector.value=prior;
   const selected=selector.value;
   const chosen=projects.filter(p=>!selected||p.id===selected);
   for(const b of document.querySelectorAll("[data-resource-tab]")) b.setAttribute("aria-pressed",String(b.dataset.resourceTab===resourceTab));
   const root=byId("resource-rows");
   if(resourceTab!=="materials"){
-    root.replaceChildren(make("p",resourceTab==="stock"?"No verified public on-site stock balances.":"No approved public labour-demand records.","resource-empty"));
+    root.replaceChildren(make("p",resourceTab==="stock"?"Stock not recorded":"Labour not recorded","resource-empty"));
     return;
   }
   const ids=new Set(chosen.map(p=>p.id));
   const rows=dataset.notices.filter(n=>n.category==="Materials"&&ids.has(n.project_id));
-  if(!rows.length){root.replaceChildren(make("p","No reviewed material instructions for this selection.","resource-empty"));return;}
+  if(!rows.length){root.replaceChildren(make("p","No material entries","resource-empty"));return;}
   const table=make("table","","resource-table");
   const head=make("thead");const h=make("tr");
-  for(const label of ["Site","Material instruction","Quantity / estimate","Details"]){const th=make("th",label);th.scope="col";h.append(th);}
+  for(const label of ["Site","Material","Quantity","Details"]){const th=make("th",label);th.scope="col";h.append(th);}
   head.append(h);table.append(head);
   const body=make("tbody");
   for(const n of rows){
@@ -266,40 +266,11 @@ function updateProjectIndex(projects) {
     button.setAttribute("aria-pressed", selectedProject() === p.id ? "true" : "false");
     if (selectedProject() === p.id) button.classList.add("active");
     withChildren(button, make("strong", p.name),
-      make("span", [p.ward ? "Ward " + p.ward : "", hasPin(p) ? "Mapped" : "No approved location",
-        mapReading(p).note, p.quality ? "Quality: " + readable(p.quality) : ""].filter(Boolean).join(" · ")));
+      make("span", projectRecords(p.id).notices.filter(fieldNotice).length ? projectRecords(p.id).notices.filter(fieldNotice).length+" notifications" : ""));
     button.addEventListener("click", () => chooseProject(p.id, true));
     return button;
   });
-  safeList("project-list", nodes, "No public projects match these filters.");
-}
-
-function updateContext(overrideId) {
-  const p = dataset.projects.find(x => x.id === (overrideId || selectedProject()));
-  const root = byId("context-card");
-  if (!p) {
-    root.replaceChildren(make("h3", "All public projects"),
-      make("p", "Choose a project or tap an approved map pin to see its site-level context."),
-      make("p", "No private source messages, payments or unapproved coordinates are displayed."));
-    return;
-  }
-  const reports = dataset.progress.filter(r => r.project_id === p.id);
-  const notices = dataset.notices.filter(n => n.project_id === p.id);
-  const detail = make("dl");
-  const pairs = [
-    ["Executing organization", p.company || "Not public"],
-    ["Location", p.ward ? "Ward " + p.ward : "Not published"],
-    ["Map pin", hasPin(p) ? "Approved" : "Not published"],
-    ["Source quality", p.quality ? readable(p.quality) + " · review pending" : "No published warning"],
-    ["Reviewed notifications", String(notices.length)],
-    ["Last published work report", reports.length ? reports[0].date : "No public report"]
-  ];
-  for (const [label, value] of pairs) withChildren(detail, make("dt", label), make("dd", value));
-  const progressLink = make("a", "Open daily progress for this site", "quiet-link");
-  progressLink.href = "./progress.html?site=" + siteQuery(p.id);
-  root.replaceChildren(make("h3", p.name), make("p", p.status ? "Listed status: " + p.status : "No public status"),
-    detail, make("p", "Listed status and reporting records do not certify completed work.", "help"),
-    progressLink);
+  safeList("project-list", nodes, "No sites");
 }
 
 function noticeCard(n) {
@@ -307,7 +278,7 @@ function noticeCard(n) {
   const head = make("div", "", "notice-item-head");
   head.append(make("span", readable(n.category || "Other"), "notice-type " + String(n.category || "").toLowerCase()));
   if(!selectedProject())head.append(make("span",projectName(n.project_id),"card-meta"));
-  const title = make("h3", n.instruction || "Public instruction not provided");
+  const title = make("h3", n.instruction || "");
   if(n.category==="Materials"&&(n.quantity||n.unit))wrapper.append(head,title,make("p",[n.quantity,n.unit].filter(Boolean).join(" · "),"resource-quantity"),materialDetails(n));
   else wrapper.append(head,title,materialDetails(n));
   return wrapper;
@@ -325,22 +296,13 @@ function renderNotifications() {
   const items = eligible.filter(n => noticeCategory === "all" || n.category === noticeCategory);
   byId("notice-total").textContent = String(items.length);
   const site = dataset.projects.find(p => p.id === selectedProject());
-  byId("notice-focus-title").textContent = site ? site.name : "All approved sites";
-  byId("notice-focus-detail").textContent = site
-    ? eligible.length + " site notifications · Status: " +
-      (site.status || "Not publicly stated")
-    : "Select a site here, in the directory, or on the map. No notice is assumed unresolved.";
+  byId("notice-focus-title").textContent = site ? site.name : "All sites";
   byId("notice-site").value = selectedProject();
   const details = byId("notifications");
   details.hidden = viewMode==="resources" || (!activeSiteId && !showAllNotices);
   byId("clear-map-selection").hidden = !activeSiteId;
-  byId("map-selection-hint").textContent = activeSiteId
-    ? "Selected: " + (site?.name || "site") + " · Tap empty map or Back to all sites"
-    : "Tap a site marker to view its notifications";
-  byId("site-progress-link").href = site
-    ? "./extraction.html?site=" + siteQuery(site.id) : "./extraction.html";
   safeList("notice-list", items.map(noticeCard),
-    site ? "No approved notifications for this site and category." : "No approved notifications match these filters.");
+    "No notifications");
 }
 
 function render() {
@@ -357,32 +319,15 @@ function render() {
     if (option.value === "all") option.textContent = "Current sites (" + tally.all + ")";
     else option.textContent = statusLabel(option.value) + " (" + (tally[option.value] || 0) + ")";
   }
-  byId("status-filter-summary").textContent =
-    statusLabel(statusFilter) + " · " + projects.length + " public projects shown" +
-    (selectedCompany() ? " for selected organization" : "") +
-    " · status is a Sheet listing, not certified completion.";
+  byId("status-filter-summary").textContent=statusLabel(statusFilter)+" · "+projects.length+" sites";
 
   updateProjectIndex(projects);
   drawMap(projects);
   if(viewMode==="resources") renderResourceDesk(projects);
-  updateContext();
   renderNotifications();
-  const reviewedSites = new Set(progress.map(r => r.project_id)).size;
-  const instructionSites = new Set(notices.map(r => r.project_id)).size;
-  const pulse = mapMode === "work"
-    ? reviewedSites + " sites have published work reports · complete remaining-task counts unavailable"
-    : mapMode === "activities"
-      ? instructionSites + " sites have reviewed instructions · open/closed confirmation unavailable"
-      : mapMode === "resources"
-        ? "Material and equipment shortage feed not connected · request confirmation in the owning resource register"
-        : mapMode === "manpower"
-          ? "Crew-demand register not connected · private attendance and payroll remain outside this map"
-          : projects.filter(hasPin).length + " approved locations · " + reviewedSites + " sites have public work reports";
-  byId("field-pulse").textContent = pulse;
   const active = dataset.notices.filter(n=>fieldNotice(n)&&filterByProject(n));
-  byId("attention-count").textContent = new Set(active.map(n => n.project_id)).size + " sites · " + active.length + " work / material notifications";
+  byId("attention-count").textContent = new Set(active.map(n => n.project_id)).size + " sites · " + active.length + " notifications";
   byId("attention-count").setAttribute("data-notice-sites", String(new Set(active.map(n => n.project_id)).size));
-  byId("map-mode-description").textContent = modeNotes[mapMode];
 }
 
 function load(payload) {
@@ -503,7 +448,7 @@ fetch("./operations.json", {cache: "no-cache"})
   .then(load)
   .catch(() => {
     byId("receipt").textContent = "Snapshot unavailable";
-    byId("project-list").textContent = "The source-backed public projection could not be loaded.";
-    byId("notice-list").textContent = "Reviewed notifications unavailable until the next successful source readback.";
+    byId("project-list").textContent = "Unavailable";
+    byId("notice-list").textContent = "Unavailable";
     byId("map-fallback").hidden = false;
   });
