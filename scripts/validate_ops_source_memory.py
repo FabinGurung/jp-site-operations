@@ -28,7 +28,8 @@ html=(ROOT/"publication/operations/index.html").read_text(encoding="utf-8")
 owner=(ROOT/"publication/operations/owner-help.html").read_text(encoding="utf-8")
 policy=(ROOT/"AGENTS.md").read_text(encoding="utf-8")
 doc=(ROOT/"docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md").read_text(encoding="utf-8")
-for value in ("memory-wall.html","data-project-status","status-filter"):
+assert "memory-wall.html" not in html
+for value in ("data-project-status","status-filter"):
     assert value in html
 assert "memory-wall.html" in owner
 assert "01 Website Source Sheets" in page
@@ -39,4 +40,4 @@ assert "Projects and Locations" in doc
 assert "OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md" in policy
 assert "SHEETS_V2" in policy
 assert LIBRARY in page
-print("OPS_SOURCE_MEMORY_PASS: owner sources=5, fact/code distinction=verified, public status controls and page linked")
+print("OPS_SOURCE_MEMORY_PASS: owner sources=5, fact/code distinction=verified, public status controls retained, history removed from homepage")

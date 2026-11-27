@@ -495,6 +495,36 @@
       "evidence_url": "https://github.com/FabinGurung/jp-site-operations/actions/runs/45610892695",
       "result": "PR_QA_PENDING",
       "limitations": "Stock and labour demand are not approved public feeds; no fabrication or source modifications."
+    },
+    {
+      "id": "OPS-DEC-20261127-DRIVE-FIRST-MINIMAL",
+      "date_npt": "2026-11-27",
+      "decision": "Owner-directed field homepage only operational facts; removed audit/guide/closure explanation, navigation to source history, gallery and redundant site detail. Map and quiet pins retained; materials/stock/labour desk retained; unknown stock/labour not fabricated. Previous HTML/JS/CSS verified byte-equivalent in Drive PRE 1FhxiBsiqmkZNGAOGcgp0G9dvNSMoIZygSBYdyAXSD3o. Drive code library is authoritative, executable Git copies only, explicit dispatch for data read/build; no new automatic source edits or scheduling. Transitional Actions builder remains until static artifact-only handoff validated. No full repository file deletions pending owner review. Secondary routes remain direct-access during transition.",
+      "fact_sources": [
+        "projects",
+        "notices",
+        "directory"
+      ],
+      "code_owner": "GOOGLE_DOCS",
+      "artifacts": [
+        "publication/operations/index.html",
+        "publication/operations/app.js",
+        "publication/operations/styles.css",
+        "scripts/status_filter_browser_qa.cjs",
+        "scripts/test_ops_publication.py",
+        ".github/workflows/operations-sheets-pages.yml",
+        ".github/source-gallery/install.py",
+        "AGENTS.md",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json",
+        "scripts/validate_ops_source_memory.py"
+      ],
+      "source_readback": "Original seven-source contract unchanged; previous homepage stored in synchronized archive.",
+      "evidence_url": "https://drive.google.com/drive/folders/1dGLQLBLmkUoEC3nXr3GRHDpdUCaj6DHM",
+      "result": "PR_QA_PENDING",
+      "limitations": "Actual AI-local build and static-artifact-only Action remain transitional; secondary routes pending approved removal."
     }
   ]
 }
