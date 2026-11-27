@@ -1,215 +1,101 @@
-name: Operations from Google Sheets
+name: Operations static publication
 on:
   pull_request:
     paths:
-      - 'publication/operations/**'
-      - '.github/source-gallery/**'
-      - 'feasibility/index.html'
-      - 'feasibility/buyer-guide/index.html'
-      - 'feasibility/buyer-guide/guide.json'
-      - 'ops/data/land-feasibility/astam-village-public.v1.0.json'
-      - 'ops/data/land-feasibility/astam-buyer-guide-public.v1.0.json'
-      - 'docs/releases/v2.3.0.md'
-      - 'docs/releases/v2.4.0.md'
-      - 'docs/releases/v2.5.0.md'
-      - 'docs/releases/v2.5.1.md'
-      - 'docs/releases/v2.6.0.md'
-      - 'docs/releases/v2.7.0.md'
-      - 'docs/releases/v2.8.0.md'
-      - 'docs/releases/v2.9.0.md'
-      - 'docs/releases/v3.0.0.md'
-      - 'docs/releases/v3.1.0.md'
-      - 'docs/releases/v3.2.0.md'
-      - 'docs/operations/EXTRACTION_WORKFLOW_RUN01.md'
-      - 'docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md'
-      - 'ops/control/operations-source-decision-ledger.v1.json'
-      - 'scripts/build_status_filter_fixture.py'
-      - 'scripts/status_filter_browser_qa.cjs'
-      - 'scripts/validate_ops_source_memory.py'
-      - 'AGENTS.md'
-      - 'docs/operations/ENGINEER_FIRST_MAP_AND_RESOURCE_BOUNDARY.md'
-      - 'A7_MODULE.json'
-      - 'ops/control/branch-lane-registry.json'
-      - 'docs/operations/LIVE_PROJECT_IDENTITY_AND_SOURCE_DATES.md'
-      - 'scripts/publish_operations.py'
-      - 'scripts/docs_semantic_read.py'
-      - 'scripts/test_ops_semantic_docs.py'
-      - 'docs/releases/v3.4.0.md'
-      - 'scripts/notification_projection.py'
-      - 'scripts/sheets_read.py'
-      - 'scripts/test_ops_publication.py'
-      - 'scripts/verify_site_capture_source.py'
-      - 'scripts/test_ops_capture_source.py'
+      - 'publication/static-operations/**'
+      - 'publication/static-operations-manifest.json'
       - '.github/workflows/operations-sheets-pages.yml'
   push:
-    branches:
-      - main
-      - feature/daily-ops-current-work
+    branches: [main]
     paths:
-      - 'publication/operations/**'
-      - '.github/source-gallery/**'
-      - 'feasibility/index.html'
-      - 'feasibility/buyer-guide/index.html'
-      - 'feasibility/buyer-guide/guide.json'
-      - 'ops/data/land-feasibility/astam-village-public.v1.0.json'
-      - 'ops/data/land-feasibility/astam-buyer-guide-public.v1.0.json'
-      - 'docs/releases/v2.3.0.md'
-      - 'docs/releases/v2.4.0.md'
-      - 'docs/releases/v2.5.0.md'
-      - 'docs/releases/v2.5.1.md'
-      - 'docs/releases/v2.6.0.md'
-      - 'docs/releases/v2.7.0.md'
-      - 'docs/releases/v2.8.0.md'
-      - 'docs/releases/v2.9.0.md'
-      - 'docs/releases/v3.0.0.md'
-      - 'docs/releases/v3.1.0.md'
-      - 'docs/releases/v3.2.0.md'
-      - 'docs/operations/EXTRACTION_WORKFLOW_RUN01.md'
-      - 'docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md'
-      - 'ops/control/operations-source-decision-ledger.v1.json'
-      - 'scripts/build_status_filter_fixture.py'
-      - 'scripts/status_filter_browser_qa.cjs'
-      - 'scripts/validate_ops_source_memory.py'
-      - 'AGENTS.md'
-      - 'docs/operations/ENGINEER_FIRST_MAP_AND_RESOURCE_BOUNDARY.md'
-      - 'A7_MODULE.json'
-      - 'ops/control/branch-lane-registry.json'
-      - 'docs/operations/LIVE_PROJECT_IDENTITY_AND_SOURCE_DATES.md'
-      - 'scripts/publish_operations.py'
-      - 'scripts/docs_semantic_read.py'
-      - 'scripts/test_ops_semantic_docs.py'
-      - 'docs/releases/v3.4.0.md'
-      - 'scripts/notification_projection.py'
-      - 'scripts/sheets_read.py'
-      - 'scripts/test_ops_publication.py'
-      - 'scripts/verify_site_capture_source.py'
-      - 'scripts/test_ops_capture_source.py'
+      - 'publication/static-operations/**'
+      - 'publication/static-operations-manifest.json'
       - '.github/workflows/operations-sheets-pages.yml'
-  # Owner-directed refresh only: normal pushes test; explicit dispatch or marked owner-requested main release reads sources.
   workflow_dispatch:
     inputs:
       publish:
-        description: Deploy the verified build to GitHub Pages
+        description: Publish the already prepared static release
         type: boolean
         default: false
-
 permissions:
   contents: read
-
 concurrency:
-  group: ops-sheets-pages-${{ github.ref }}
+  group: ops-static-pages-${{ github.ref }}
   cancel-in-progress: false
-
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - run: node --check publication/operations/app.js
-      - run: node --check .github/source-gallery/source-gallery.js
-      - run: node --check publication/operations/progress.js
-      - run: node --check publication/operations/sources.js
-      - run: node --check publication/operations/extraction.js
-      - run: node --check publication/operations/closed-work.js
-      - run: node --check scripts/status_filter_browser_qa.cjs
-      - run: python -m unittest discover -s scripts -p 'test_ops_publication.py' -v
-      - run: python -m unittest discover -s scripts -p 'test_ops_semantic_docs.py' -v
-      - run: python -m unittest discover -s scripts -p 'test_ops_capture_source.py' -v
-      - run: python scripts/validate_ops_source_memory.py
-
-  browser-status-qa:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    # Preinstalled, version-matched browser engines and OS dependencies.
-    container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
-      options: --ipc=host
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1
-      - name: Verify preinstalled Chromium and WebKit executables
-        run: node -e "const fs = require('node:fs'); const pw = require('playwright'); for (const engine of [pw.chromium,pw.webkit]) fs.accessSync(engine.executablePath(),fs.constants.X_OK)"
-      - run: python scripts/build_status_filter_fixture.py _status_preview
-      - name: Exercise mobile and desktop status source controls in Chromium
+      - name: Verify exact prepared artifact and public schema
+        shell: python
+        run: |
+          import hashlib, json, pathlib, re
+          root = pathlib.Path('publication/static-operations')
+          m = json.loads(pathlib.Path('publication/static-operations-manifest.json').read_text())
+          assert m['schema'] == 'JP_STATIC_RELEASE_V1'
+          assert m['source_authority'] == 'GOOGLE_DOCS_AND_SHEETS'
+          assert m['prepared_by'] == 'AI_CODE_MODE'
+          assert m['counts']['semantic_contracts'] == 7
+          paths = {p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
+          assert paths == set(m['files']), 'Unexpected or missing artifact files'
+          assert {'.nojekyll','index.html','app.js','styles.css','operations.json','closed-work.json','site-updates.json','extraction-status.json'} <= paths
+          for name, digest in m['files'].items():
+              p = root / name
+              assert not p.is_symlink() and '..' not in pathlib.PurePosixPath(name).parts
+              assert name == '.nojekyll' or re.fullmatch(r'[a-z0-9-]+(?:/[a-z0-9-]+)*\.(html|js|css|json)', name), name
+              assert hashlib.sha256(p.read_bytes()).hexdigest() == digest, name
+              if p.suffix == '.json': json.loads(p.read_text())
+          data = json.loads((root/'operations.json').read_text())
+          counts = m['counts']
+          assert data['provenance']['publication_engine'] == 'AI_PREPARED_STATIC_V1'
+          assert data['provenance']['live_workbook_count'] == 7
+          assert data['provenance']['semantic_google_docs_status'] == 'GOOGLE_DOCS_VERIFIED'
+          assert data['provenance']['registered_google_docs_checked'] == counts['original_docs']
+          assert data['provenance']['reviewed_google_doc_quotes_checked'] == counts['quotes']
+          pids = {r['id'] for r in data['projects']}
+          assert len(pids) == len(data['projects']) == counts['projects']
+          assert 'PRJ-000030' not in pids
+          assert all(re.fullmatch(r'PRJ-[0-9]{6}', p) for p in pids)
+          assert len(data['notices']) == counts['notices']
+          assert len(data['progress']) == counts['progress']
+          assert all(r['project_id'] in pids for r in data['notices']+data['progress'])
+          assert len({r['notification_id'] for r in data['notices']}) == len(data['notices'])
+          assert all(set(r) <= {'id','name','status','ward','site','quality','company_id','company','lat','lng'} for r in data['projects'])
+          assert all(set(r) <= {'notification_id','project_id','category','instruction','due_date','display_order','date','quantity','unit','source_doc_url'} for r in data['notices'])
+          assert all(set(r) == {'id','project_id','work','status','date','verification'} for r in data['progress'])
+          closed = json.loads((root/'closed-work.json').read_text())
+          assert closed['total'] == len(closed['records']) == counts['closed']
+          assert all(set(r) <= {'id','kind','project_id','project_name','summary','category','source_date','decision','decision_label','closed_on'} and r['project_id'] in pids for r in closed['records'])
+          updates = json.loads((root/'site-updates.json').read_text())
+          assert updates['summary']['public_site_count'] == counts['projects']
+          assert updates['summary']['reviewed_notice_count'] == counts['notices']
+          assert updates['summary']['published_work_report_count'] == counts['progress']
+          assert {s['project_id'] for s in updates['site_summaries']} == pids
+          extraction = json.loads((root/'extraction-status.json').read_text())
+          assert extraction['public_counts']['projects'] == counts['projects']
+          assert extraction['public_counts']['reviewed_notices'] == counts['notices']
+          assert extraction['public_counts']['work_reports'] == counts['progress']
+          home = (root/'index.html').read_text()
+          assert 'id="resource-view"' in home and 'id="map-canvas"' in home
+          assert 'data-jp-no-gallery' in home and 'data-jp-source-gallery' not in home
+          assert 'Earlier notifications in Google Drive' not in home
+          assert 'Resolution not recorded' not in home
+          print('STATIC_ARTIFACT_VALIDATED', len(paths), counts)
+      - name: Check delivered JavaScript syntax
         shell: bash
-        run: |
-          set -euo pipefail
-          python -m http.server 8766 --directory _status_preview >/tmp/ops-status-qa.log 2>&1 &
-          server_pid=$!
-          trap 'kill "$server_pid" || true' EXIT
-          for i in {1..20}; do
-            if curl -fsS http://127.0.0.1:8766/operations.json -o /dev/null; then break; fi
-            sleep 1
-          done
-          node scripts/status_filter_browser_qa.cjs
-
-  project:
-    if: >-
-      always() &&
-      github.ref == 'refs/heads/main' &&
-      (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[JP-OWNER-PUBLISH]'))) &&
-      needs.test.result == 'success' &&
-      vars.JP_OPERATIONS_PAGES_MODE == 'SHEETS_V2' &&
-      needs['browser-status-qa'].result == 'success'
-    needs: [test, browser-status-qa]
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
+        run: find publication/static-operations -name '*.js' -type f -print0 | xargs -0 -r -n1 node --check
+      - name: Upload exactly the prepared artifact on an owner-requested release
+        if: github.ref == 'refs/heads/main' && ((github.event_name == 'workflow_dispatch' && inputs.publish) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[JP-OWNER-PUBLISH]')))
+        uses: actions/upload-pages-artifact@v3
         with:
-          persist-credentials: false
-      - name: Check Google configuration
-        env:
-          WIF_PROVIDER: ${{ vars.JP_GOOGLE_MAIN_WORKLOAD_IDENTITY_PROVIDER }}
-          SERVICE_ACCOUNT: ${{ vars.JP_GOOGLE_SERVICE_ACCOUNT }}
-        run: |
-          if [ -z "$WIF_PROVIDER" ] || [ -z "$SERVICE_ACCOUNT" ]; then
-            echo "::error::Configure the repository's Google Workload Identity provider and service account variables."
-            exit 1
-          fi
-      - uses: google-github-actions/auth@v3
-        id: auth
-        with:
-          workload_identity_provider: ${{ vars.JP_GOOGLE_MAIN_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.JP_GOOGLE_SERVICE_ACCOUNT }}
-          token_format: access_token
-          access_token_scopes: |
-            https://www.googleapis.com/auth/spreadsheets.readonly
-            https://www.googleapis.com/auth/documents.readonly
-            https://www.googleapis.com/auth/drive.readonly
-          create_credentials_file: false
-          export_environment_variables: false
-      - name: Verify transferred Fishtail capture headers (read only)
-        env:
-          GOOGLE_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
-        run: python scripts/verify_site_capture_source.py
-      - name: Verify semantic Google Docs and original Sheets; build public Pages files
-        env:
-          GOOGLE_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
-        run: python scripts/publish_operations.py --output _site
-      - name: Install the registered Google Drive source gallery
-        run: python3 .github/source-gallery/install.py _site jp-site-operations
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
+          path: publication/static-operations
   deploy:
-    if: github.ref == 'refs/heads/main' && always() && needs.project.result == 'success' && vars.JP_OPERATIONS_PAGES_MODE == 'SHEETS_V2' && ((github.event_name == 'workflow_dispatch' && inputs.publish) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[JP-OWNER-PUBLISH]')))
-    needs: project
+    if: github.ref == 'refs/heads/main' && ((github.event_name == 'workflow_dispatch' && inputs.publish) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[JP-OWNER-PUBLISH]')))
+    needs: validate
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -223,77 +109,34 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/deploy-pages@v4
         id: deployment
-
   verify-live-pages:
     if: github.ref == 'refs/heads/main' && needs.deploy.result == 'success'
     needs: deploy
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Verify deployed homepage and reviewed projection
-        shell: bash
+      - name: Verify every served file against the static release manifest
+        shell: python
         run: |
-          set -euo pipefail
-          pages="https://fabingurung.github.io/${GITHUB_REPOSITORY#*/}"
-          mkdir -p /tmp/ops-expected
-          cp publication/operations/{index.html,app.js,styles.css,sources.html} /tmp/ops-expected/
-          python3 .github/source-gallery/install.py /tmp/ops-expected "${GITHUB_REPOSITORY#*/}"
-          for file in index.html app.js styles.css sources.html; do
-            echo "Checking deployed $file against gallery-installed expected artifact"
-            matched=false
-            for attempt in {1..12}; do
-              if curl -fsS --max-time 15 "$pages/$file?commit=$GITHUB_SHA&attempt=$attempt" -o /tmp/ops-live && cmp -s /tmp/ops-live "/tmp/ops-expected/$file"; then
-                matched=true
-                break
-              fi
-              sleep 5
-            done
-            if [ "$matched" != true ]; then echo "::error::Live artifact mismatch: $file"; exit 1; fi
-          done
-          curl -fsS --retry 5 --retry-all-errors --max-time 20 "$pages/operations.json?commit=$GITHUB_SHA" | python -c 'import json,sys; d=json.load(sys.stdin); assert d["provenance"]["live_workbook_count"]==7; assert d["provenance"]["source_authority"]=="GOOGLE_SHEETS"; p={x["id"] for x in d["projects"]}; assert "PRJ-000030" not in p; assert all(n["project_id"] in p for n in d["notices"]); print("LIVE_PAGES_READBACK_PASS",len(p),len(d["notices"]))'
-
-  release-reviewed-closures-v3-2:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: deploy
-    runs-on: ubuntu-24.04
-    timeout-minutes: 8
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-          persist-credentials: false
-      - name: Verify separate closure page, original Sheets, and tag v3.2.0
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          notes='docs/releases/v3.2.0.md'
-          tag='v3.2.0'
-          if git diff --quiet HEAD^ HEAD -- "$notes"; then
-            echo 'v3.2 release notes not changed; skip tag'
-            exit 0
-          fi
-          pages="https://fabingurung.github.io/${GITHUB_REPOSITORY#*/}"
-          for file in index.html app.js styles.css extraction.html extraction.js closed-work.html closed-work.js progress.html progress.js sources.html sources.js memory-wall.html owner-help.html; do
-            curl -fsS --retry 6 --retry-delay 4 --retry-all-errors "$pages/$file?commit=$GITHUB_SHA" | cmp - "publication/operations/$file"
-          done
-          curl -fsS --retry 6 --retry-delay 4 --retry-all-errors "$pages/closed-work.json?commit=$GITHUB_SHA" \
-          | python -c 'import json,sys; d=json.load(sys.stdin); r=d["records"]; assert d["kind"]=="SOURCE_REVIEWED_CLOSED_WORK"; assert len(r)==d["total"]; assert sum(d["decisions"].values())==d["total"]; assert all(x["decision"] in {"COMPLETED","NOT_REQUIRED","CANCELLED","SUPERSEDED"} for x in r); assert len({x["kind"]+":"+x["id"] for x in r})==len(r); assert all("closure_reason" not in x and "closure_reviewer" not in x and "closure_evidence" not in x for x in r); assert "PRJ-000030" not in {x["project_id"] for x in r}; print("CLOSED_WORK_REVIEWED_PUBLIC_PASS",d["total"])'
-          curl -fsS --retry 6 --retry-delay 4 --retry-all-errors "$pages/operations.json?commit=$GITHUB_SHA" \
-          | python -c 'import json,sys; d=json.load(sys.stdin); assert d["provenance"]["live_workbook_count"]==7; assert d["provenance"]["source_authority"]=="GOOGLE_SHEETS"; assert len(d["projects"])==d["identity"]["public_project_count"]; assert "PRJ-000030" not in {x["id"] for x in d["projects"]}; print("SEVEN_SHEETS_PROJECTS_PRESERVED",len(d["projects"]),len(d["notices"]),len(d["progress"]))'
-          for entry in resources/project-documents.html feasibility/index.html feasibility/buyer-guide/index.html; do
-            body=$(curl -fsS --retry 6 --retry-delay 4 --retry-all-errors "$pages/$entry?commit=$GITHUB_SHA")
-            grep -Fq 'u.search = location.search' <<< "$body"
-          done
-          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            test "$(git ls-remote origin "refs/tags/$tag" | cut -f1)" = "$GITHUB_SHA"
-          else
-            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
-              --title 'JP Site Operations — Reviewed Closed Work v3.2.0' --notes-file "$notes"
-          fi
+          import hashlib, json, os, pathlib, time, urllib.request
+          m = json.loads(pathlib.Path('publication/static-operations-manifest.json').read_text())
+          base = 'https://fabingurung.github.io/jp-site-operations/'
+          count = 0
+          for name, digest in m['files'].items():
+              if name == '.nojekyll': continue  # GitHub Pages need not serve control files.
+              for attempt in range(10):
+                  try:
+                      url = base + name + '?commit=' + os.environ['GITHUB_SHA'] + '&attempt=' + str(attempt)
+                      with urllib.request.urlopen(url, timeout=20) as response:
+                          got = hashlib.sha256(response.read()).hexdigest()
+                      if got == digest: break
+                  except Exception:
+                      pass
+                  time.sleep(4)
+              else:
+                  raise RuntimeError('Deployed file mismatch: '+name)
+              count += 1
+          print('STATIC_LIVE_READBACK_PASS', count, m['counts'])

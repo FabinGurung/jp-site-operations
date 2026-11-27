@@ -1,0 +1,525 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "DERIVED_PUBLIC_SITE_INTERPRETATION",
+  "source_authority": "SAME_SEVEN_ORIGINAL_GOOGLE_SHEETS",
+  "readback_at_npt": "2026-11-27T10:41+05:45",
+  "summary": {
+    "public_site_count": 29,
+    "reviewed_notice_count": 5,
+    "registered_message_source_count": 2,
+    "published_work_report_count": 3,
+    "unverified_work_report_count": 3,
+    "sites_with_notices": 1,
+    "sites_with_reports": 3,
+    "latest_notice_date": "2026-11-18",
+    "notice_categories": {
+      "Work": 2,
+      "Materials": 1,
+      "Supervision": 2
+    },
+    "latest_work_date": "2026-10-09"
+  },
+  "interpretation": {
+    "notice": "Reviewed source instructions; open/closed status is not established.",
+    "work": "Historical reported activities; unverified rows are not construction certificates.",
+    "coverage": "Missing public reports do not establish inactivity.",
+    "new_provider_ingestion": false,
+    "chat_providers": "Slack, Discord and WhatsApp are not automatically ingested by this publisher.",
+    "materials_and_crews": "No verified live demand feed connected."
+  },
+  "site_summaries": [
+    {
+      "project_id": "PRJ-000006",
+      "name": "31 Sharada Adhikari",
+      "status": "Construction",
+      "reviewed_notice_count": 5,
+      "notice_categories": {
+        "Work": 2,
+        "Materials": 1,
+        "Supervision": 2
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": "2026-11-18",
+      "last_report_date": null,
+      "notice_meaning": "5 reviewed instruction(s) recorded (Work: 2, Materials: 1, Supervision: 2). Closure is not confirmed.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000020",
+      "name": "Kharika Paudel",
+      "status": "Construction",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 1,
+      "unverified_report_count": 1,
+      "last_notice_date": null,
+      "last_report_date": "2026-10-09",
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "1 recorded work report(s); 1 lack confirmed verification."
+    },
+    {
+      "project_id": "PRJ-000005",
+      "name": "30 Sabitri Giri / Dipti Giri",
+      "status": "Construction",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 1,
+      "unverified_report_count": 1,
+      "last_notice_date": null,
+      "last_report_date": "2026-10-09",
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "1 recorded work report(s); 1 lack confirmed verification."
+    },
+    {
+      "project_id": "PRJ-000002",
+      "name": "17 Samir Man Ghubaju",
+      "status": "Construction",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 1,
+      "unverified_report_count": 1,
+      "last_notice_date": null,
+      "last_report_date": "2026-10-09",
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "1 recorded work report(s); 1 lack confirmed verification."
+    },
+    {
+      "project_id": "PRJ-000029",
+      "name": "14 Basanti Poudel Baral",
+      "status": "",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000028",
+      "name": "Bhalam Park — Phase 2",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000027",
+      "name": "Bhalam Park — Phase 1",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000026",
+      "name": "Bhalam River Gabion Mesh Works — Phase 2",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000025",
+      "name": "Bhalam River Works — Phase 1",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000024",
+      "name": "Bhalam 200 m Road",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000023",
+      "name": "Bhalam Road — 28 m",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000022",
+      "name": "New Airport Petty Works — 2025-08-22",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000021",
+      "name": "New Airport Restroom Construction",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000019",
+      "name": "Matepani Plastic Dai Project",
+      "status": "Approval",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000018",
+      "name": "Prithvi Mandi Septic Tank, Public Toilet and Boundary Wall Construction",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000017",
+      "name": "Temple Himalaya Hotel and Spa Renovation",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000016",
+      "name": "Old Airport Petty Renovation and Maintenance Works",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000015",
+      "name": "Parshyang Paver Work",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000014",
+      "name": "Shree Sansarimai Mandir Truss, Brickwork and RCC Slab Works",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000013",
+      "name": "Red Cross Flagstone Pavement, Metal Door and Stone Cladding Works",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000012",
+      "name": "Gyan Marga Road Work",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000011",
+      "name": "Firke Pool Road and Drain Works",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000010",
+      "name": "Ward No. 4 Office Front Drain",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000009",
+      "name": "Chautara Landscaping",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000008",
+      "name": "Basketball Court",
+      "status": "Completed",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000007",
+      "name": "15 Narayani Parajuli",
+      "status": "Construction",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000004",
+      "name": "16 Yamuna Pun Adai",
+      "status": "Maintenance",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000003",
+      "name": "13 Hari Baral",
+      "status": "Construction",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    },
+    {
+      "project_id": "PRJ-000001",
+      "name": "14 Bishal Paija",
+      "status": "Construction",
+      "reviewed_notice_count": 0,
+      "notice_categories": {
+        "Work": 0,
+        "Materials": 0,
+        "Supervision": 0
+      },
+      "published_report_count": 0,
+      "unverified_report_count": 0,
+      "last_notice_date": null,
+      "last_report_date": null,
+      "notice_meaning": "No reviewed public instructions linked; this does not prove there are none.",
+      "work_meaning": "No published work report linked; field activity is unknown."
+    }
+  ]
+}
