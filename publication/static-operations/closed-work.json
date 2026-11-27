@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "SOURCE_REVIEWED_CLOSED_WORK",
+  "readback_at_npt": "2026-11-27T10:47+05:45",
+  "source_authority": "EXISTING_NOTIFICATION_INSTRUCTIONS_AND_PROJECT_WORK_SHEETS",
+  "total": 0,
+  "decisions": {
+    "COMPLETED": 0,
+    "NOT_REQUIRED": 0,
+    "CANCELLED": 0,
+    "SUPERSEDED": 0
+  },
+  "records": [],
+  "closure_contract": {
+    "source_fields": [
+      "Closure Decision",
+      "Closure Approved",
+      "Closure Date",
+      "Closure Reviewer",
+      "Closure Reason",
+      "Closure Evidence",
+      "Superseded By"
+    ],
+    "required_for_approved_closure": [
+      "decision",
+      "approved",
+      "date",
+      "reviewer",
+      "reason"
+    ],
+    "completion_additionally_requires_evidence": true,
+    "work_completion_requires_verified_status": true,
+    "private_reviewer_reason_evidence_excluded": true,
+    "absence_does_not_imply_completed": true
+  }
+}

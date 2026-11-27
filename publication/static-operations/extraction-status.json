@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "batch_id": "OPS-EXTRACT-R01-20261114",
+  "batch_scope": "EXISTING_SHEETS_RECONCILIATION_NOT_NEW_PROVIDER_INGEST",
+  "readback_at_npt": "2026-11-27T10:47+05:45",
+  "source_counts": {
+    "workbooks": 7,
+    "semantic_contracts": 7,
+    "registered_google_docs_checked": 1,
+    "project_rows": 30,
+    "publication_settings": 30,
+    "message_sources": 2,
+    "organizations": 9
+  },
+  "public_counts": {
+    "projects": 29,
+    "reviewed_notices": 5,
+    "work_reports": 3,
+    "unverified_work_reports": 3
+  },
+  "source_dates": {
+    "projects": "2026-10-23",
+    "notifications": "2026-11-18",
+    "progress": "2026-10-09"
+  },
+  "provider_collection": {
+    "slack": "NO_DIRECT_COLLECTOR",
+    "discord": "NOT_CONNECTED",
+    "telegram": "NOT_CONNECTED",
+    "source_register_only": true
+  },
+  "evidence_bytes_reverified_in_this_publisher": false,
+  "quality_boundaries": {
+    "identity": "PUBLIC_PROJECTS_AND_PERMISSION_GRANTS_ONLY",
+    "completion": "NOT_ENGINEER_CERTIFIED",
+    "source_freshness": "SOURCE_ROW_DATE_NOT_PUBLISHER_READ_TIME",
+    "unresolved_notices": "NOT_DETERMINED_FROM_REVIEWED_NOTICES"
+  }
+}
