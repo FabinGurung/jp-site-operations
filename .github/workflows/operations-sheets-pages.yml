@@ -86,6 +86,29 @@ jobs:
           assert 'data-jp-no-gallery' in home and 'data-jp-source-gallery' not in home
           assert 'Earlier notifications in Google Drive' not in home
           assert 'Resolution not recorded' not in home
+          from html.parser import HTMLParser
+          class Links(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.hrefs = []
+              def handle_starttag(self, tag, attrs):
+                  a = dict(attrs)
+                  if tag == 'a' and 'href' in a:
+                      self.hrefs.append(a['href'])
+          assert 'more.html' in paths
+          assert 'href="./more.html">More' in home
+          page = (root/'more.html').read_text()
+          links = Links()
+          links.feed(page)
+          assert './#map' in links.hrefs and './#notifications' in links.hrefs
+          project_sheets = [u for u in links.hrefs if re.fullmatch(r'https://docs.google.com/spreadsheets/d/[A-Za-z0-9_-]+/edit#gid=24061124', u)]
+          assert len(project_sheets) == len(set(project_sheets)) == counts['projects']
+          external = [u for u in links.hrefs if u.startswith('https://')]
+          assert len(external) == len(set(external))
+          assert all(re.fullmatch(r'https://(?:docs.google.com/(?:spreadsheets|document)/d/[A-Za-z0-9_-]+/edit(?:#gid=[0-9]+)?|drive.google.com/drive/folders/[A-Za-z0-9_-]+)', u) for u in external)
+          assert 'Fishtail Builders — projects' in page and 'Rohini Engineering — projects' in page
+          assert 'id="directory-search"' in page and 'data-jp-no-gallery' in page
+          print('STATIC_DIRECTORY_LINKS_PASS', len(project_sheets), len(external))
           print('STATIC_ARTIFACT_VALIDATED', len(paths), counts)
       - name: Check delivered JavaScript syntax
         shell: bash

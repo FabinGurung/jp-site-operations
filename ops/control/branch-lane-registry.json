@@ -1358,6 +1358,29 @@
         "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
         "ops/control/operations-source-decision-ledger.v1.json"
       ]
+    },
+    {
+      "branch_id": "OPS-SYS-MORE-DIRECTORY-R27",
+      "branch_name": "feature/more-source-directory-20261128",
+      "status": "ACTIVE_FEATURE_LANE",
+      "allowed_for_work": true,
+      "requires_pull_request": true,
+      "merge_base": "main",
+      "direct_pages_deploy": false,
+      "purpose": "Third More tab, grouped registered source links and navigation-only static publication",
+      "allowed_paths": [
+        "publication/static-operations/index.html",
+        "publication/static-operations/more.html",
+        "publication/operations/index.html",
+        "publication/operations/more.html",
+        "publication/static-operations-manifest.json",
+        ".github/workflows/operations-sheets-pages.yml",
+        "AGENTS.md",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json"
+      ]
     }
   ]
 }

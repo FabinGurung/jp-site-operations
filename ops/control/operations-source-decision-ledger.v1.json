@@ -585,6 +585,33 @@
       "evidence_url": "https://docs.google.com/document/d/1bAiwSLKZxnrEOYbz-QBePAzzr8BV0elcUvSF-yT9ttw/edit",
       "result": "AI_ARTIFACT_VERIFIED__PR_AND_LIVE_QA_PENDING",
       "limitations": "No new source facts or closure decisions. Old source/template copies retained for compatibility; production workflow does not execute them."
+    },
+    {
+      "id": "OPS-DEC-20261128-MORE-DIRECTORY",
+      "date_npt": "2026-11-28",
+      "decision": "28 November 2026: Owner requested a third top-level More tab, with project/company Google Sheets and Docs and grouped shared registers, code library and messaging sources. The Drive-authored More HTML is https://docs.google.com/document/d/1hUgYTel4__lzCt0QcQZ64YDfTxVWFsYX-j134ZjfyiU/edit . Include it alongside the other three presentation source Docs in future AI static builds (15 templates, not 14). Navigation-only static release R000004: https://docs.google.com/document/d/1JQCJYeFAwgBaI_vTnDMsGfRQrb7nNxB_85GrhNRQkM8/edit . 162 distinct Google links; 29 project pairs, six existing fact-source directory entries plus the directory itself, all other shared directory entries, company and messaging links. Original operational JSON unchanged byte-for-byte; no new notice, no ACL change, no private document contents published. Direct restricted-file links explicitly requested; Google access permissions apply. Static workflow V000005 validates the project sheet link count and allowed URL formats. No Google access or domain processing in Actions. Old releases preserved. Production verification pending.",
+      "fact_sources": [
+        "directory",
+        "projects"
+      ],
+      "code_owner": "GOOGLE_DOCS",
+      "artifacts": [
+        "publication/static-operations/index.html",
+        "publication/static-operations/more.html",
+        "publication/operations/index.html",
+        "publication/operations/more.html",
+        "publication/static-operations-manifest.json",
+        ".github/workflows/operations-sheets-pages.yml",
+        "AGENTS.md",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json"
+      ],
+      "source_readback": "Verified current source index, project pairs, directory and code library; prior operational artifact hashes retained.",
+      "evidence_url": "https://docs.google.com/document/d/1JQCJYeFAwgBaI_vTnDMsGfRQrb7nNxB_85GrhNRQkM8/edit",
+      "result": "PR_QA_PENDING",
+      "limitations": "No Google ACL changes. Private targets require existing permission; directory exposes links only."
     }
   ]
 }
