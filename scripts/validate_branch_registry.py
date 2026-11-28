@@ -112,7 +112,8 @@ system_bases={"system/notification-center": "feature/daily-ops-current-work", "s
               "feature/material-labour-desk-20261125": "main",
               "feature/drive-first-minimal-field-20261127": "main",
               "feature/ai-static-publication-20261127": "main",
-              "feature/more-source-directory-20261128": "main"}
+              "feature/more-source-directory-20261128": "main",
+              "feature/unified-owner-navigator-20261128": "main"}
 for lane in system_lanes:
     name=lane.get("branch_name","")
     if (name not in system_bases or lane.get("allowed_for_work") is not True

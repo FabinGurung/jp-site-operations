@@ -105,8 +105,16 @@ jobs:
           assert len(project_sheets) == len(set(project_sheets)) == counts['projects']
           external = [u for u in links.hrefs if u.startswith('https://')]
           assert len(external) == len(set(external))
-          assert all(re.fullmatch(r'https://(?:docs.google.com/(?:spreadsheets|document)/d/[A-Za-z0-9_-]+/edit(?:#gid=[0-9]+)?|drive.google.com/drive/folders/[A-Za-z0-9_-]+)', u) for u in external)
-          assert 'Fishtail Builders — projects' in page and 'Rohini Engineering — projects' in page
+          allowed_google = r'https://(?:docs.google.com/(?:spreadsheets|document)/d/[A-Za-z0-9_-]+/edit(?:#gid=[0-9]+)?|drive.google.com/drive/folders/[A-Za-z0-9_-]+)'
+          allowed_desk = r'https://fabingurung\.github\.io/jp-field-desk-library/(?:\?project=PRJ-[0-9]{6})?'
+          assert all(re.fullmatch(allowed_google, u) or re.fullmatch(allowed_desk, u) for u in external)
+          engineering = [u.rsplit('=',1)[-1] for u in external if re.fullmatch(r'https://fabingurung\.github\.io/jp-field-desk-library/\?project=PRJ-[0-9]{6}',u)]
+          assert set(engineering) == pids and len(engineering) == counts['projects']
+          assert '1S1fkWzo6XGzyD3p92_pTG32zZ9fF3YICAv3HPTomZsE' not in page
+          assert '1-DhklD5WyvNtsYNpEgvisIOlzNA6iSX_U3Bqci4FZ7I' in page
+          assert 'Project Funding — retired reference' in page
+          assert page.count('>Update Sheet</a>') == page.count('>Working Doc</a>') == page.count('>Operations folder</a>') == page.count('>Engineering index</a>') == counts['projects']
+          assert 'Fishtail Builders — project updates' in page and 'Rohini Engineering — project updates' in page
           assert 'id="directory-search"' in page and 'data-jp-no-gallery' in page
           print('STATIC_DIRECTORY_LINKS_PASS', len(project_sheets), len(external))
           print('STATIC_ARTIFACT_VALIDATED', len(paths), counts)

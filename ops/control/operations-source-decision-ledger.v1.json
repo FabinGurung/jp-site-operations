@@ -612,6 +612,31 @@
       "evidence_url": "https://docs.google.com/document/d/1JQCJYeFAwgBaI_vTnDMsGfRQrb7nNxB_85GrhNRQkM8/edit",
       "result": "PR_QA_PENDING",
       "limitations": "No Google ACL changes. Private targets require existing permission; directory exposes links only."
+    },
+    {
+      "id": "OPS-DEC-20261128-UNIFIED-OWNER-NAVIGATOR",
+      "date_npt": "2026-11-28",
+      "decision": "28 November 2026 — Unified owner navigator. More distinguishes Update Sheet, Working Doc, Operations folder and Engineering index for all 29 canonical project IDs. Field Desk retains engineering resources and the per-project query route; catalogue coverage varies and does not imply complete or approved drawings. A7 directory 00_SOURCE_DIRECTORY A1:H35 corrected 37 cells, preserving 34 rows and live workbook ID. KKG retired link replaced with verified Estimation LIVE V1.1, Project Funding marked RETIRED_ARCHIVE; folder pointers corrected to current owners. PRE https://docs.google.com/spreadsheets/d/10yeqSvwjCSOXNww398K0U3dABZ_KbiGCi_-cRYnApjg/edit ; POST https://docs.google.com/spreadsheets/d/1Vbhco1t6wlJ20tlRYwMEUgDVsE61rmW-xmfNn1fLTu0/edit . All 29 Manual updates tabs verified at gid 24061124, existing 29 Docs retained; use either, reconcile on explicit owner request, never treat blank rows as changes. More source Doc 08 V000002 and workflow Doc V000006 exact readback. R000005 https://docs.google.com/document/d/1hKWYbs5sCW_uHDkOPdUejBPPN-PUIwbS_cFqNDDSodQ/edit changes only more.html from R000004, retains approved operational JSON and other static files byte-for-byte. 194 unique links; no source data edits, no engineering files moved and no ACL changes. Production QA pending.",
+      "fact_sources": [
+        "directory",
+        "projects"
+      ],
+      "code_owner": "GOOGLE_DOCS",
+      "artifacts": [
+        "publication/static-operations/more.html",
+        "publication/operations/more.html",
+        "publication/static-operations-manifest.json",
+        ".github/workflows/operations-sheets-pages.yml",
+        "AGENTS.md",
+        "ops/control/branch-lane-registry.json",
+        "scripts/validate_branch_registry.py",
+        "docs/operations/OPERATIONS_SOURCE_DECISIONS_MEMORY_WALL.md",
+        "ops/control/operations-source-decision-ledger.v1.json"
+      ],
+      "source_readback": "34 directory rows verified, 29 Manual updates tabs verified, Field Desk canonical project baseline and supported project query inspected.",
+      "evidence_url": "https://docs.google.com/document/d/1hKWYbs5sCW_uHDkOPdUejBPPN-PUIwbS_cFqNDDSodQ/edit",
+      "result": "PR_QA_PENDING",
+      "limitations": "Engineering catalogue completeness not certified; navigation-only release, no new operational facts."
     }
   ]
 }
